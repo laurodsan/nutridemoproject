@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${add} ? 'Nuevo cliente' : 'Actualizar cliente'"></title>
+</head>
+
+<body>
+    <h1 th:text="${add} ? 'Nuevo cliente' : 'Actualizar cliente'"></h1>
+    <br>
+
+    <form th:action="@{/clientes/save}" th:object="${clienteDTO}" method="post">
+
+        <table border="0">
+            <tr th:if="${clienteDTO.id}">
+                <td>Id</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{id}" readonly /></td>
+            </tr>
+            <tr>
+                <td>Nombre</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{nombre}" required /></td>
+            </tr>
+            <tr>
+                <td>Apellidos</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{apellido}" required /></td>
+            </tr>
+            <tr>
+                <td>Correo electrónico</td>
+                <td>:</td>
+                <td><input type="email" th:field="*{email}" required /></td>
+            </tr>
+            <tr>
+                <td>Contraseña</td>
+                <td>:</td>
+                <td><input type="password" th:field="*{password}" required /></td>
+            </tr>
+            <tr>
+                <td>Edad</td>
+                <td>:</td>
+                <td><input type="number" th:field="*{edad}" min="0" required /></td>
+            </tr>
+            <tr>
+                <td>Peso actual (kg)</td>
+                <td>:</td>
+                <td><input type="number" th:field="*{pesoActual}" step="0.1" min="0" /></td>
+            </tr>
+            <tr>
+                <td>Altura (m)</td>
+                <td>:</td>
+                <td><input type="number" th:field="*{altura}" step="0.01" min="0" /></td>
+            </tr>
+            <tr>
+                <td>Objetivo</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{objetivo}" /></td>
+            </tr>
+            <tr>
+                <td>Actividad</td>
+                <td>:</td>
+                <td>
+                    <select th:field="*{actividad}">
+                        <option value="">Seleccione nivel</option>
+                        <option value="sedentario">Sedentario</option>
+                        <option value="ligero">Ligero</option>
+                        <option value="moderado">Moderado</option>
+                        <option value="intenso">Intenso</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Preferencias</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{preferencias}" /></td>
+            </tr>
+        </table>
+
+        <br>
+        <input type="submit" th:value="${add} ? 'Nuevo' : 'Actualizar'" />
+
+    </form>
+
+    <br>
+    <a th:href="@{/clientes}">Volver a la lista de clientes</a>
+</body>
+
+</html>

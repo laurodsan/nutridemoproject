@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mantenimiento de Clientes</title>
+</head>
+
+<body>
+    <h1>Mantenimiento de Clientes</h1>
+    <br>
+    <div>
+        <br>
+        <!-- Mostrar mensaje si no hay clientes -->
+        <h2 th:if="${listaClientesDTO.isEmpty()}">No hay clientes</h2>
+
+        <!-- Tabla de clientes -->
+        <div th:if="${!listaClientesDTO.isEmpty()}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <td>Id</td>
+                        <td>Nombre</td>
+                        <td>Apellidos</td>
+                        <td>Correo electrónico</td>
+                        <td>Edad</td>
+                        <td>Peso (kg)</td>
+                        <td>Altura (m)</td>
+                        <td>Objetivo</td>
+                        <td>Actividad</td>
+                        <td>Preferencias</td>
+                        <td>Fecha Registro</td>
+                        <td>Editar</td>
+                        <td>Eliminar</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${listaClientesDTO}">
+                        <td>
+                            <a th:href="@{/clientes/{idCliente}(idCliente=${item.id})}" 
+                               th:text="${item.id}"></a>
+                        </td>
+                        <td th:text="${item.nombre}"></td>
+                        <td th:text="${item.apellido}"></td>
+                        <td th:text="${item.email}"></td>
+                        <td th:text="${item.edad}"></td>
+                        <td th:text="${item.pesoActual}"></td>
+                        <td th:text="${item.altura}"></td>
+                        <td th:text="${item.objetivo}"></td>
+                        <td th:text="${item.actividad}"></td>
+                        <td th:text="${item.preferencias}"></td>
+                        <td th:text="${#dates.format(item.fechaRegistro, 'dd/MM/yyyy')}"></td>
+                        <td>
+                            <a th:href="@{/clientes/update/{idCliente}(idCliente=${item.id})}">Editar</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/clientes/delete/{idCliente}(idCliente=${item.id})}">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            <div>
+                <a th:href="@{/clientes/add}">Agregar nuevo cliente</a> <br>
+                <a th:href="@{/}">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
