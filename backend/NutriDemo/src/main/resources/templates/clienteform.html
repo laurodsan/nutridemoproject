@@ -10,9 +10,12 @@
     <h1 th:text="${add} ? 'Nuevo cliente' : 'Actualizar cliente'"></h1>
     <br>
 
-    <form th:action="@{/clientes/save}" th:object="${clienteDTO}" method="post">
+    <!-- Formulario: el action incluye el idNutricionista y th:object apunta a clienteDTO -->
+    <form th:action="@{/nutricionistas/{idNutricionista}/clientes/save(idNutricionista=${clienteDTO.nutricionistaDTO.id})}"  
+          th:object="${clienteDTO}" method="post">
 
         <table border="0">
+            <!-- Campo oculto para el ID del cliente si es actualización -->
             <tr th:if="${clienteDTO.id}">
                 <td>Id</td>
                 <td>:</td>
@@ -79,12 +82,14 @@
         </table>
 
         <br>
-        <input type="submit" th:value="${add} ? 'Nuevo' : 'Actualizar'" />
+        <input type="submit" th:value="${add} ? 'Crear' : 'Actualizar'" />
 
     </form>
 
     <br>
-    <a th:href="@{/clientes}">Volver a la lista de clientes</a>
+    <!-- Volver a la lista de clientes del mismo nutricionista -->
+    <a th:href="@{/nutricionistas/{idNutricionista}/clientes(idNutricionista=${clienteDTO.nutricionistaDTO.id})}">Volver a la lista de clientes</a>
 </body>
 
 </html>
+

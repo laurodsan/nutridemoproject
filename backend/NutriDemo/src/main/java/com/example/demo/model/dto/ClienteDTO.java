@@ -7,8 +7,10 @@ import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.demo.repository.entity.Cliente;
+import com.example.demo.repository.entity.Nutricionista;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 public class ClienteDTO implements Serializable {
@@ -31,7 +33,12 @@ public class ClienteDTO implements Serializable {
 	@DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
 	private Date fechaRegistro;
 	
-	public static ClienteDTO convertToDTO(Cliente cliente) {
+	@ToString.Exclude
+    private NutricionistaDTO nutricionistaDTO;
+	
+	
+	public static ClienteDTO convertToDTO(Cliente cliente, NutricionistaDTO nutricionista) {
+		
 		if (cliente == null)
 			return null;
 
@@ -49,11 +56,17 @@ public class ClienteDTO implements Serializable {
 		clienteDTO.setActividad(cliente.getActividad());
 		clienteDTO.setPreferencias(cliente.getPreferencias());
 		clienteDTO.setFechaRegistro(cliente.getFechaRegistro());
+		
+		if (nutricionista != null) {
+            clienteDTO.setNutricionistaDTO(nutricionista);
+        } else {
+        	clienteDTO.setNutricionistaDTO(new NutricionistaDTO()); // Evitar NullPointerException
+        }
 
 		return clienteDTO;
 	}
 
-	public static Cliente convertToEntity(ClienteDTO clienteDTO) {
+	public static Cliente convertToEntity(ClienteDTO clienteDTO, Nutricionista nutricionista) {
 
 		Cliente cliente = new Cliente();
 		cliente.setId(clienteDTO.getId());
@@ -68,12 +81,16 @@ public class ClienteDTO implements Serializable {
 		cliente.setActividad(clienteDTO.getActividad());
 		cliente.setPreferencias(clienteDTO.getPreferencias());
 		cliente.setFechaRegistro(clienteDTO.getFechaRegistro());
+		
+		 // Establecer el nutricionista para el cliente
+        cliente.setNutricionista(nutricionista);
 
 		return cliente;
 	}
 
 	public ClienteDTO() {
 		super();
+		this.nutricionistaDTO = new NutricionistaDTO();
 	}
 
 	@Override

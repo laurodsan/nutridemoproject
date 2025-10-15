@@ -1,6 +1,5 @@
 package com.example.demo.repository.entity;
 
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -24,52 +23,39 @@ import lombok.ToString;
 
 @Data
 @Entity
-@Table(name = "cliente")
-public class Cliente {
+@Table(name = "menu")
+public class Menu {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name = "nombre")
-	private String nombre;
-	@Column(name = "apellido")
-	private String apellido;
-	@Column(name = "email")
-	private String email;
-	@Column(name = "password")
-	private String password;
-	@Column(name = "edad")
-	private int edad;
-	@Column(name = "pesoActual")
-	private double pesoActual;
-	@Column(name = "altura")
-	private double altura;
-	@Column(name = "objetivo")
-	private String objetivo;
-	@Column(name = "actividad")
-	private String actividad;
 
-	@Column(columnDefinition = "TEXT")
-	private String preferencias;
-
-	// Atributo que almacena la fecha 
+	// Atributo que almacena la fecha
 	@Temporal(TemporalType.DATE)
-	@Column(name = "fechaRegistro")
-	private Date fechaRegistro;
-	
-	@ManyToOne
-	@JoinColumn(name = "idnutricionista", nullable = false)
-	private Nutricionista nutricionista;
-	
-	@ToString.Exclude
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cliente")
-	private Set<Menu> menusRecibidos;
-	
+	@Column(name = "fechaInicio")
+	private Date fechaInicio;
 
-	public Cliente() {
-		super();
-		this.menusRecibidos = new HashSet<Menu>();
-	}
+	@Temporal(TemporalType.DATE)
+	@Column(name = "fechaFin")
+	private Date fechaFin;
+
+	@Column(name = "descripcion", columnDefinition = "TEXT")
+	private String descripcion;
+
+	@Column(name = "estado")
+	private String estado;
+
+	@ManyToOne
+	@JoinColumn(name = "id_cliente", nullable = false)
+	private Cliente cliente;
+
+	@ManyToOne
+	@JoinColumn(name = "id_nutricionista", nullable = false)
+	private Nutricionista nutricionista;
+
+	@ToString.Exclude
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "menu")
+	private Set<Comida> listaComidas;
 
 	@Override
 	public boolean equals(Object obj) {
@@ -79,7 +65,7 @@ public class Cliente {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cliente other = (Cliente) obj;
+		Menu other = (Menu) obj;
 		return Objects.equals(id, other.id);
 	}
 
@@ -88,5 +74,9 @@ public class Cliente {
 		return Objects.hash(id);
 	}
 
-	
+	public Menu() {
+		super();
+		this.listaComidas = new HashSet<Comida>();
+	}
+
 }

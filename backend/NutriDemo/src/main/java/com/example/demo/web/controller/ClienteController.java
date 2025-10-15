@@ -14,58 +14,57 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.dto.ClienteDTO;
+import com.example.demo.model.dto.NutricionistaDTO;
 import com.example.demo.service.ClienteService;
+import com.example.demo.service.NutricionistaService;
 
 @Controller
 public class ClienteController {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private NutricionistaService nutricionistaService;
 
 
 	private static final Logger log = LoggerFactory.getLogger(ClienteController.class);
 
 	// Listar los clientes
-	@GetMapping("/clientes")
-	public ModelAndView findAll() {
+	@GetMapping("/nutricionistas/{idNutricionista}/clientes")
+	public ModelAndView findAllByNutricionista(@PathVariable Long idNutricionista) {
 
 		log.info("ClienteController - index: Mostrar una lista de clientes");
+		
+		NutricionistaDTO nutricionistaDTO = new NutricionistaDTO();
+		nutricionistaDTO.setId(idNutricionista);
+		nutricionistaDTO = nutricionistaService.findById(nutricionistaDTO);
+		
+		List<ClienteDTO> listaClientesDTO = clienteService.findAllByNutricionista(nutricionistaDTO);
 
 		ModelAndView mav = new ModelAndView("clientes");
-		List<ClienteDTO> listaClientesDTO = clienteService.findAll(); // Para obtener la lista de clientes DTO le pido
-																		// la informacion al servicio
+		mav.addObject("nutricionistaDTO", nutricionistaDTO);
 		mav.addObject("listaClientesDTO", listaClientesDTO);
 
 		return mav;
 
 	}
 	
-	// Visualizar cliente
-	@GetMapping("/clientes/{idCliente}")
-	public ModelAndView findById(@PathVariable("idCliente") Long idCliente) {
-
-		log.info("ClienteController - findById: Mostramos la informacion del cliente:" + idCliente);
-
-		ClienteDTO clienteDTO = new ClienteDTO();
-		clienteDTO.setId(idCliente);
-
-		clienteDTO = clienteService.findById(clienteDTO); // llamada al servicio
-
-		ModelAndView mav = new ModelAndView("clienteshow");
-		mav.addObject("clienteDTO", clienteDTO);
-
-		return mav;
-
-	}
-	
 	// Dar de alta un cliente
-	@GetMapping("/clientes/add")
-	public ModelAndView add() {
+	@GetMapping("/nutricionistas/{idNutricionista}/clientes/add")
+	public ModelAndView add(@PathVariable("idNutricionista") Long idNutricionista) {
 
-		log.info("ClienteController - add: Anyadimos un cliente nuevo");
+		log.info("ClienteController - add: Anyadimos un cliente nuevo para " + idNutricionista);
+		
+		NutricionistaDTO nutricionistaDTO = new NutricionistaDTO();
+		nutricionistaDTO.setId(idNutricionista);
+		
+		ClienteDTO clienteDTO = new ClienteDTO();
+		clienteDTO.setNutricionistaDTO(nutricionistaDTO);
+		
 
 		ModelAndView mav = new ModelAndView("clienteform");
-		mav.addObject("clienteDTO", new ClienteDTO());
+		mav.addObject("clienteDTO", clienteDTO);
 		mav.addObject("add", true);
 
 		return mav;
@@ -73,10 +72,13 @@ public class ClienteController {
 	}
 	
 	// Save clientes
-	@PostMapping("/clientes/save")
-	public ModelAndView save(@ModelAttribute("clienteDTO") ClienteDTO clienteDTO) {
+	@PostMapping("/nutricionistas/{idNutricionista}/clientes/save")
+	public ModelAndView save(@PathVariable("idNutricionista") Long idNutricionista, @ModelAttribute("clienteDTO") ClienteDTO clienteDTO) {
 
-		log.info("ClienteController - save: Salvamos los datos del cliente:" + clienteDTO.toString());
+		log.info("ClienteController - save: Añadir una cuenta para: " + idNutricionista);
+		
+		
+		clienteDTO.getNutricionistaDTO().setId(idNutricionista); // Aseguramos que el ID del cliente esté seteado
 		
 		// Asignar fecha de registro automáticamente si no está establecida
 	    if (clienteDTO.getFechaRegistro() == null) {
@@ -85,32 +87,38 @@ public class ClienteController {
 
 		clienteService.save(clienteDTO);
 
-		ModelAndView mav = new ModelAndView("redirect:/clientes");
+		ModelAndView mav = new ModelAndView("redirect:/nutricionistas/" + idNutricionista + "/clientes");
 		return mav;
 	}
 	
 	//Actualizar un cliente
-	@GetMapping("/clientes/update/{idCliente}")
-	public ModelAndView update(@PathVariable("idCliente") Long idCliente) {
+	@GetMapping("/nutricionistas/{idNutricionista}/clientes/{idCliente}/update")
+	public ModelAndView update(@PathVariable("idNutricionista") Long idNutricionista, @PathVariable("idCliente") Long idCliente) {
 
-		log.info("ClienteController - update: Actualizamos el cliente: " + idCliente);
+		log.info("ClienteController - update: Actualiza un cliente" + idCliente + " para el nutricionista: " + idNutricionista);
 
 		ClienteDTO clienteDTO = new ClienteDTO();
 		clienteDTO.setId(idCliente);
-
-		clienteDTO = clienteService.findById(clienteDTO); // llamada al servicio
+		
+		NutricionistaDTO nutricionistaDTO = new NutricionistaDTO();
+		nutricionistaDTO.setId(idNutricionista);
+		
+		clienteDTO.setNutricionistaDTO(nutricionistaDTO);
+		
+		// Buscar la cuenta a actualizar
+		ClienteDTO clienteDtoDeseado = clienteService.findByClienteId(clienteDTO);
 		
 		ModelAndView mav = new ModelAndView("clienteform");
-		mav.addObject("clienteDTO",clienteDTO);
-		mav.addObject("add", false);
+		mav.addObject("clienteDTO", clienteDtoDeseado);
+		mav.addObject("add", false); // Indicamos que es una actualización, no una creación
 
 		return mav;
 
 	}
 	
 	// Borrar un cliente
-	@GetMapping("/clientes/delete/{idCliente}")
-	public ModelAndView delete(@PathVariable("idCliente") Long idCliente) {
+	@GetMapping("/nutricionistas/{idNutricionista}/clientes/delete/{idCliente}")
+	public ModelAndView delete(@PathVariable Long idNutricionista, @PathVariable Long idCliente) {
 
 		log.info("ClienteController - delete: Borramos el cliente:" + idCliente);
 
@@ -119,7 +127,7 @@ public class ClienteController {
 
 		clienteService.delete(clienteDTO); // llamada al servicio
 
-		ModelAndView mav = new ModelAndView("redirect:/clientes");
+		ModelAndView mav = new ModelAndView("redirect:/nutricionistas/{idNutricionista}/clientes");
 
 		return mav;
 

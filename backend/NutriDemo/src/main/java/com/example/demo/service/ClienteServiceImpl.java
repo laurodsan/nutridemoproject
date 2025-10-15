@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.dto.ClienteDTO;
+import com.example.demo.model.dto.NutricionistaDTO;
 import com.example.demo.repository.dao.ClienteRepository;
 import com.example.demo.repository.entity.Cliente;
+import com.example.demo.repository.entity.Nutricionista;
 
 @Service
 public class ClienteServiceImpl implements ClienteService{
@@ -21,60 +23,64 @@ public class ClienteServiceImpl implements ClienteService{
 	@Autowired
 	private ClienteRepository clienteRepository;
 
+
 	@Override
-	public List<ClienteDTO> findAll() {
-		log.info("ClienteServiceImpl - index: Mostrar una lista de clientes");
+	public List<ClienteDTO> findAllByNutricionista(NutricionistaDTO nutricionistaDTO) {
+		
+		log.info("ClienteServiceImpl - findAllByNutricionistaAll: Lista de todas los clientes del nutricionista: " + nutricionistaDTO.getId());
+		
+		List<Cliente> lista = (List<Cliente>) clienteRepository.findAllByNutricionista(nutricionistaDTO.getId());
 
-		List<ClienteDTO> listaClientesDTO = new ArrayList<ClienteDTO>();
-		List<Cliente> listaClientes = clienteRepository.findAll();
+		List<ClienteDTO> listaResultadoDTO = new ArrayList<ClienteDTO>();
 
-		for (int i = 0; i < listaClientes.size(); i++) {
-			Cliente cliente = listaClientes.get(i);
-			ClienteDTO clienteDTO = ClienteDTO.convertToDTO(cliente);
-			listaClientesDTO.add(clienteDTO);
+		for (int i = 0; i < lista.size(); ++i) {
+			listaResultadoDTO.add(ClienteDTO.convertToDTO(lista.get(i), nutricionistaDTO));
 		}
 
-		return listaClientesDTO;
+		return listaResultadoDTO;
 	}
-
+	
 	@Override
-	public ClienteDTO findById(ClienteDTO clienteDTO) {
+	public void delete(ClienteDTO clienteDTO) {
 
-		log.info("ClienteServiceImpl - findById: Mostrar cliente por id: " + clienteDTO.getId());
+		log.info("ClienteServiceImpl - delete: Elimina el cliente: " + clienteDTO.getId());
 
-		Optional<Cliente> cliente = clienteRepository.findById(clienteDTO.getId());
-		if (cliente.isPresent()) {
-			clienteDTO = ClienteDTO.convertToDTO(cliente.get());
-			return clienteDTO;
-		} else {
-			return null;
-		}
-
+		clienteRepository.deleteById(clienteDTO.getId());
 	}
 
 	@Override
 	public void save(ClienteDTO clienteDTO) {
 		
-		log.info("ClienteServiceImpl - save: Salvamos el cliente: " + clienteDTO.toString());
+		log.info("ClienteServiceImpl - save: Salva el cliente" + clienteDTO + " del nutricionista " + clienteDTO.getNutricionistaDTO().getId());
 
-		Cliente cliente = ClienteDTO.convertToEntity(clienteDTO);
+		Nutricionista nutricionista = new Nutricionista();
+		nutricionista.setId(clienteDTO.getNutricionistaDTO().getId());
+
+		Cliente cliente = ClienteDTO.convertToEntity(clienteDTO, nutricionista);
+		
 		clienteRepository.save(cliente);
 	}
+	
 
 	@Override
-	public void delete(ClienteDTO clienteDTO) {
+	public ClienteDTO findByClienteId(ClienteDTO clienteDTO) {
+		
+		log.info("ClienteServiceImpl - findByClienteId: Obtener el cliente con id: " + clienteDTO.getId());
 
-		log.info("ClienteServiceImpl - delete: Borramos el cliente: " + clienteDTO.getId());
+		// Buscar el cliente por ID usando el repositorio
+		Cliente cliente = clienteRepository.findById(clienteDTO.getId()).orElse(null);
 
-		Cliente cliente = new Cliente();
-		cliente.setId(clienteDTO.getId());
-
-		Optional<Cliente> clienteOpt = clienteRepository.findById(clienteDTO.getId());
-	    if (clienteOpt.isPresent()) {
-	        clienteRepository.delete(clienteOpt.get());
-	    } else {
-	        log.warn("ClienteServiceImpl - delete: Cliente con ID " + clienteDTO.getId() + " no encontrado.");
-	    }
+		if (cliente != null) {
+			// Convertir el cliente a DTO y devolverla
+			NutricionistaDTO nutricionistaDTO = NutricionistaDTO.convertToDTO(cliente.getNutricionista());
+			return ClienteDTO.convertToDTO(cliente, nutricionistaDTO);
+		} else {
+			// Si no se encuentra el cliente, devolver null o lanzar una excepción si lo
+			// prefieres
+			return null;
+		}
 	}
+
+
 
 }

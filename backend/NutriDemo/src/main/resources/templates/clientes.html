@@ -30,6 +30,7 @@
                         <td>Actividad</td>
                         <td>Preferencias</td>
                         <td>Fecha Registro</td>
+                        <td>Menús</td> <!-- 🔹 Nueva columna -->
                         <td>Editar</td>
                         <td>Eliminar</td>
                     </tr>
@@ -37,7 +38,8 @@
                 <tbody>
                     <tr th:each="item : ${listaClientesDTO}">
                         <td>
-                            <a th:href="@{/clientes/{idCliente}(idCliente=${item.id})}" 
+                            <!-- Enlace al detalle del cliente -->
+                            <a th:href="@{/nutricionistas/{idNutricionista}/clientes/{idCliente}(idNutricionista=${nutricionistaDTO.id}, idCliente=${item.id})}" 
                                th:text="${item.id}"></a>
                         </td>
                         <td th:text="${item.nombre}"></td>
@@ -50,11 +52,23 @@
                         <td th:text="${item.actividad}"></td>
                         <td th:text="${item.preferencias}"></td>
                         <td th:text="${#dates.format(item.fechaRegistro, 'dd/MM/yyyy')}"></td>
+
+                        <!-- 🔹 Nueva columna: enlace para ver menús -->
                         <td>
-                            <a th:href="@{/clientes/update/{idCliente}(idCliente=${item.id})}">Editar</a>
+                            <a th:href="@{/nutricionistas/{idNutricionista}/clientes/{idCliente}/menus(idNutricionista=${nutricionistaDTO.id}, idCliente=${item.id})}">
+                                Ver menús
+                            </a>
+                        </td>
+
+                        <td>
+                            <a th:href="@{/nutricionistas/{idNutricionista}/clientes/{idCliente}/update(idNutricionista=${nutricionistaDTO.id}, idCliente=${item.id})}">
+                                Editar
+                            </a>
                         </td>
                         <td>
-                            <a th:href="@{/clientes/delete/{idCliente}(idCliente=${item.id})}">Eliminar</a>
+                            <a th:href="@{/nutricionistas/{idNutricionista}/clientes/delete/{idCliente}(idNutricionista=${nutricionistaDTO.id}, idCliente=${item.id})}">
+                                Eliminar
+                            </a>
                         </td>
                     </tr>
                 </tbody>
@@ -62,7 +76,10 @@
 
             <br>
             <div>
-                <a th:href="@{/clientes/add}">Agregar nuevo cliente</a> <br>
+                <a th:href="@{/nutricionistas/{idNutricionista}/clientes/add(idNutricionista=${nutricionistaDTO.id})}">
+                    Agregar nuevo cliente
+                </a> 
+                <br>
                 <a th:href="@{/}">Volver al inicio</a>
             </div>
         </div>
@@ -70,3 +87,7 @@
 </body>
 
 </html>
+
+
+
+

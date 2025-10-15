@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Visualizar nutricionista</title>
+</head>
+
+<body>
+    <h1>Visualizar nutricionista</h1>
+    <br>
+
+    <table border="0">
+        <tr>
+            <td>Id</td>
+            <td>:</td>
+            <td th:text="${nutricionistaDTO.id}"></td>
+        </tr>
+        <tr>
+            <td>Nombre</td>
+            <td>:</td>
+            <td th:text="${nutricionistaDTO.nombre}"></td>
+        </tr>
+        <tr>
+            <td>Correo electrónico</td>
+            <td>:</td>
+            <td th:text="${nutricionistaDTO.email}"></td>
+        </tr>
+        <tr>
+            <td>Especialidad</td>
+            <td>:</td>
+            <td th:text="${nutricionistaDTO.especialidad}"></td>
+        </tr>
+    </table>
+
+    <br><br>
+    <a th:href="@{/nutricionistas}">Volver a la lista de nutricionistas</a>
+
+</body>
+
+</html>
