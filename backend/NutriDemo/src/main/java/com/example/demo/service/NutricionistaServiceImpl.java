@@ -11,21 +11,19 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.dto.NutricionistaDTO;
 import com.example.demo.repository.dao.NutricionistaRepository;
-import com.example.demo.repository.entity.Cliente;
 import com.example.demo.repository.entity.Nutricionista;
-
 
 @Service
 public class NutricionistaServiceImpl implements NutricionistaService {
-	
+
 	private static final Logger log = LoggerFactory.getLogger(NutricionistaServiceImpl.class);
-	
+
 	@Autowired
 	private NutricionistaRepository nutricionistaRepository;
 
 	@Override
 	public List<NutricionistaDTO> findAll() {
-		
+
 		log.info("NutricionistaServiceImpl - index: Mostrar una lista de nutricionista");
 
 		List<NutricionistaDTO> listaNutricionistasDTO = new ArrayList<NutricionistaDTO>();
@@ -57,12 +55,12 @@ public class NutricionistaServiceImpl implements NutricionistaService {
 
 	@Override
 	public void save(NutricionistaDTO nutricionistaDTO) {
-		
+
 		log.info("NutricionistaServiceImpl - save: Salvamos el nutricionista: " + nutricionistaDTO.toString());
 
 		Nutricionista nutricionista = NutricionistaDTO.convertToEntity(nutricionistaDTO);
 		nutricionistaRepository.save(nutricionista);
-		
+
 	}
 
 	@Override
@@ -74,11 +72,41 @@ public class NutricionistaServiceImpl implements NutricionistaService {
 		nutricionista.setId(nutricionistaDTO.getId());
 
 		Optional<Nutricionista> nutricionistaOpt = nutricionistaRepository.findById(nutricionistaDTO.getId());
-	    if (nutricionistaOpt.isPresent()) {
-	    	nutricionistaRepository.delete(nutricionistaOpt.get());
-	    } else {
-	        log.warn("NutricionistaServiceImpl - delete: Nutricionista con ID " + nutricionistaDTO.getId() + " no encontrado.");
-	    }
+		if (nutricionistaOpt.isPresent()) {
+			nutricionistaRepository.delete(nutricionistaOpt.get());
+		} else {
+			log.warn("NutricionistaServiceImpl - delete: Nutricionista con ID " + nutricionistaDTO.getId()
+					+ " no encontrado.");
+		}
 	}
+
+	@Override
+	public NutricionistaDTO loginNutricionista(String email, String password) {
+
+	    log.info("NutricionistaServiceImpl - loginNutricionista: Intentando login para correo: " + email);
+
+	    // Buscamos la entidad en la base de datos
+	    Optional<Nutricionista> opt = nutricionistaRepository.findByEmail(email);
+
+	    if (opt.isPresent()) {
+	        Nutricionista nutri = opt.get();
+
+	        // Comprobamos contraseña
+	        if (password.equals(nutri.getPassword())) {
+	            // Convertimos la entidad a DTO para enviar al controlador
+	            NutricionistaDTO nutricionistaDTO = new NutricionistaDTO();
+	            nutricionistaDTO.setId(nutri.getId());
+	            nutricionistaDTO.setNombre(nutri.getNombre());
+	            nutricionistaDTO.setEmail(nutri.getEmail());
+	            return nutricionistaDTO;
+	        }
+	    }
+
+	    // Si no coincide o no existe, devolvemos null
+	    return null;
+	}
+
+
+
 
 }

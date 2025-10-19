@@ -7,29 +7,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-
-
 @Controller
 public class IndexController {
 
-	private static final Logger log = LoggerFactory.getLogger(IndexController.class);
-	@Value("${aplicacion.nombre}")
-	private String nombreAplicacion;
+    private static final Logger log = LoggerFactory.getLogger(IndexController.class);
 
-	@Value("${aplicacion.nombre}")
-	private String nombreAsignatura;
+    @Value("${aplicacion.nombre}")
+    private String nombreAplicacion;
 
-	@GetMapping("/")
-	public ModelAndView index() {
+    @Value("${aplicacion.asignatura}")
+    private String nombreAsignatura;
 
-		log.info("IndexController - index: Mostrar la página inicial");
+    @GetMapping("/")
+    public ModelAndView index() {
+        log.info("IndexController - index: Mostrar la página inicial");
 
-		ModelAndView mav = new ModelAndView("index");
-		mav.addObject("titulo", nombreAplicacion);
-		mav.addObject("nombreAsignatura", nombreAsignatura);
+        ModelAndView mav = new ModelAndView("index"); // Thymeleaf buscará templates/index.html
+        mav.addObject("titulo", nombreAplicacion);
+        mav.addObject("nombreAsignatura", nombreAsignatura);
 
-		return mav;
-
-	}
+        return mav;
+    }
 }
+
 

@@ -81,6 +81,29 @@ public class ClienteServiceImpl implements ClienteService{
 		}
 	}
 
+	@Override
+	public ClienteDTO loginCliente(String email, String password) {
+		 log.info("ClienteServiceImpl - loginCliente: Intentando login para correo: " + email);
 
+	        // Buscar cliente por email
+	        Optional<Cliente> opt = clienteRepository.findByEmail(email);
+
+	        if (opt.isPresent()) {
+	            Cliente cliente = opt.get();
+
+	            // Comprobar contraseña (texto plano)
+	            if (password.equals(cliente.getPassword())) {
+	                // Convertimos la entidad a DTO
+	                ClienteDTO clienteDTO = new ClienteDTO();
+	                clienteDTO.setId(cliente.getId());
+	                clienteDTO.setNombre(cliente.getNombre());
+	                clienteDTO.setEmail(cliente.getEmail());
+	                return clienteDTO;
+	            }
+	        }
+
+	        // Si no coincide o no existe, devolvemos null
+	        return null;
+	    }
 
 }

@@ -1,0 +1,27 @@
+.register-body {
+  background-color: #f7faf9;
+  min-height: 100vh;
+}
+
+.register-container {
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+  max-width: 1000px;
+}
+
+.register-img {
+  background-size: cover;
+  background-position: center;
+}
+
+.register-card {
+  .btn.active {
+    background-color: #12b661;
+    color: #fff;
+  }
+
+  .form-control, .form-select {
+    border-radius: 0.5rem;
+  }
+}

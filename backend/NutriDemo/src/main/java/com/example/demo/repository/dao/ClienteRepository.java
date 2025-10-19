@@ -21,6 +21,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     // Cambiado el tipo de retorno a Optional<Cliente>
     public Optional<Cliente> findById(Long idCliente);
+    
+ // Nuevo: buscar por email para login
+    public Optional<Cliente> findByEmail(String email);
    
-
 }

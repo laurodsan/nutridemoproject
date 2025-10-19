@@ -46,21 +46,6 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-1px);
 }
 
-.btn-custom-outline {
-  border: 2px solid #5e9ff2;
-  color: #5e9ff2;
-  font-weight: 500;
-  background-color: transparent;
-  transition: all 0.2s ease-in-out;
-  border-radius: 25px;
-  padding: 10px 20px;
-}
-.btn-custom-outline:hover {
-  background-color: #5e9ff2;
-  color: white;
-  transform: translateY(-1px);
-}
-
 .btn-outline-primary {
   border: 2px solid #3bd97f;
   color: #3bd97f;
@@ -180,28 +165,4 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(0);
     opacity: 1;
   }
-}
-.register-body {
-  background-color: #f7faf9;
-  min-height: 100vh;
-}
-
-.register-container {
-  background: #fff;
-  border-radius: 1rem;
-  overflow: hidden;
-  max-width: 1000px;
-}
-
-.register-img {
-  background-size: cover;
-  background-position: center;
-}
-
-.register-card .btn.active {
-  background-color: #12b661;
-  color: #fff;
-}
-.register-card .form-control, .register-card .form-select {
-  border-radius: 0.5rem;
 }/*# sourceMappingURL=main.css.map */

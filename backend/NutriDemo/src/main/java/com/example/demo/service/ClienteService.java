@@ -16,6 +16,7 @@ public interface ClienteService {
 
 	ClienteDTO findByClienteId(ClienteDTO clienteDTO);
 
+	ClienteDTO loginCliente(String email, String password);
 
 
 }

@@ -14,5 +14,7 @@ public interface NutricionistaService {
 
 	void delete(NutricionistaDTO nutricionistaDTO);
 
+	NutricionistaDTO loginNutricionista(String email, String password);
+
 
 }
