@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${titulo}">Dashboard</title>
+</head>
+<body>
+
+<h1>Bienvenido, <span th:text="${clienteDTO.nombre}">Nombre</span></h1>
+
+<p><strong>Email:</strong> <span th:text="${clienteDTO.email}"></span></p>
+<p><strong>Plan actual:</strong> <span th:text="${clienteDTO.planDTO.nombre}"></span></p>
+<p><strong>Fecha registro:</strong> <span th:text="${clienteDTO.fechaRegistro}"></span></p>
+
+<hr>
+
+<h2>Accesos rápidos</h2>
+<ul>
+
+<li>
+    <a th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${clienteDTO.id})}">
+        Evaluación inicial
+    </a>
+</li>
+
+
+    <li><a href="#">Programa</a></li>
+    <li><a href="#">Menús</a></li>
+    <li><a href="#">Agenda de citas</a></li>
+</ul>
+
+</body>
+</html>
+

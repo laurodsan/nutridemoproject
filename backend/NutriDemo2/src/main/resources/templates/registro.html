@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Registro | NutriDemo</title>
+
+<!-- Bootstrap -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+	crossorigin="anonymous" />
+
+<!-- Bootstrap Iconos -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+	rel="stylesheet" />
+
+<!-- CSS principal -->
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+
+<!-- Tipografías -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap"
+	rel="stylesheet" />
+</head>
+
+<body>
+
+	<!-- 🔹 Navbar -->
+	<header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+		<div
+			class="container d-flex justify-content-between align-items-center">
+			<a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+				<img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo"
+				height="40" class="me-2" />
+			</a>
+
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse justify-content-between"
+				id="navbarNav">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link"
+						href="#funcionalidades">Planes</a></li>
+					<li class="nav-item"><a class="nav-link" href="#faq">Preguntas
+							frecuentes</a></li>
+					<li class="nav-item"><a class="nav-link" href="#sobre">Sobre
+							nosotros</a></li>
+				</ul>
+
+				<div class="d-flex align-items-center">
+					<a class="btn btn-outline-primary me-2" th:href="@{/login}">Iniciar
+						sesión</a> <a class="btn btn-primary" href="#cita"><i
+						class="bi bi-calendar4-week"></i> Agendar cita</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- 🔹 Sección de registro -->
+	<section
+		class="register-section d-flex align-items-center min-vh-100 mt-5">
+		<div class="container p-5">
+			<div class="row shadow-lg rounded-4 overflow-hidden">
+
+				<!-- Imagen -->
+				<div class="col-md-6 d-none d-md-block p-0">
+					<img th:src="@{/img/imagen-registro.jpg}" alt="Registro"
+						class="img-fluid h-100 object-fit-cover">
+				</div>
+
+				<!-- Formulario -->
+				<div class="col-md-6 bg-white p-5">
+					<h2 class="fw-semibold mb-4">Crear cuenta</h2>
+
+					<!-- Selector de tipo -->
+					<div class="mb-4">
+						<label class="form-label">Selecciona el tipo de usuario</label><br>
+						<br>
+						<div class="d-flex gap-3">
+							<button type="button" class="btn btn-primary" id="btnCliente">Cliente</button>
+							<button type="button" class="btn btn-outline-secondary"
+								id="btnNutricionista">Nutricionista</button>
+						</div>
+					</div>
+
+					<!-- Formulario Cliente -->
+					<form id="formCliente" class="needs-validation"
+						th:action="@{/registro/cliente}" method="post" novalidate>
+						<div class="mb-3">
+							<label for="nombreCliente" class="form-label">Nombre</label> <input
+								type="text" class="form-control" id="nombreCliente"
+								name="nombre" required>
+							<div class="invalid-feedback">El nombre es obligatorio.</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="apellidoCliente" class="form-label">Apellido</label>
+							<input type="text" class="form-control" id="apellidoCliente"
+								name="apellido" required>
+							<div class="invalid-feedback">El apellido es obligatorio.</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="emailCliente" class="form-label">Correo
+								electrónico</label> <input type="email" class="form-control"
+								id="emailCliente" name="email" required>
+							<div class="invalid-feedback">Por favor, introduce un
+								correo válido.</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="passwordCliente" class="form-label">Contraseña</label>
+							<input type="password" class="form-control" id="passwordCliente"
+								name="password" minlength="6" required>
+							<div class="invalid-feedback">La contraseña debe tener al
+								menos 6 caracteres.</div>
+						</div>
+
+						<!-- 🔹 SELECT DEL PLAN ELEGIDO -->
+						<div class="mb-3">
+							<label for="planCliente" class="form-label">Selecciona un
+								plan</label> <select class="form-select" id="planCliente"
+								name="planDTO.id" required>
+								<option value="">Selecciona un plan</option>
+								<option value="1">Básico</option>
+								<option value="2">Estándar</option>
+								<option value="3">Pro</option>
+							</select>
+							<div class="invalid-feedback">Selecciona un plan.</div>
+						</div>
+
+						<div class="d-grid">
+							<button type="submit" class="btn btn-primary">Registrar
+								cliente</button>
+						</div>
+					</form>
+
+					<!-- Formulario Nutricionista -->
+					<form id="formNutricionista" class="needs-validation d-none"
+						th:action="@{/registro/nutricionista}" method="post" novalidate>
+						<div class="mb-3">
+							<label for="nombreNutri" class="form-label">Nombre
+								completo</label> <input type="text" class="form-control"
+								id="nombreNutri" name="nombre" required>
+							<div class="invalid-feedback">El nombre es obligatorio.</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="emailNutri" class="form-label">Correo
+								electrónico</label> <input type="email" class="form-control"
+								id="emailNutri" name="email" required>
+							<div class="invalid-feedback">Introduce un correo válido.</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="passwordNutri" class="form-label">Contraseña</label>
+							<input type="password" class="form-control" id="passwordNutri"
+								name="password" minlength="6" required>
+							<div class="invalid-feedback">La contraseña debe tener al
+								menos 6 caracteres.</div>
+						</div>
+
+						<div class="mb-3">
+							<label for="especialidad" class="form-label">Especialidad</label>
+							<select id="especialidad" class="form-select" name="especialidad"
+								required>
+								<option value="">Selecciona una especialidad</option>
+								<option value="deportiva">Nutrición deportiva</option>
+								<option value="clinica">Nutrición clínica</option>
+								<option value="vegana">Nutrición vegana</option>
+							</select>
+							<div class="invalid-feedback">Selecciona una especialidad.</div>
+						</div>
+
+						<div class="d-grid">
+							<button type="submit" class="btn btn-primary">Registrar
+								nutricionista</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 🔹 Footer -->
+	<footer class="footer text-white py-3">
+		<div class="container text-center">
+			<p class="mb-0">© 2025 NutriDemo. Todos los derechos reservados.</p>
+		</div>
+	</footer>
+
+	<!-- JS -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+	<script th:src="@{/js/registro.js}"></script>
+</body>
+</html>
+
+

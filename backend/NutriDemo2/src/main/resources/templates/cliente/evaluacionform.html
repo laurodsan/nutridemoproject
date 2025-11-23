@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${add} ? 'Nueva Evaluación' : 'Actualizar Evaluación'"></title>
+</head>
+
+<body>
+    <h1 th:text="${add} ? 'Nueva Evaluación Inicial' : 'Actualizar Evaluación Inicial'"></h1>
+    <br>
+
+    <!-- Formulario: th:object apunta a evaluacionDTO -->
+    <form th:action="@{/cliente/dashboard/{idCliente}/evaluacion/save(idCliente=${evaluacionDTO.clienteDTO.id})}"  
+      th:object="${evaluacionDTO}" method="post">
+
+        <table border="0">
+            <!-- Campo oculto para el ID de la evaluación si es actualización -->
+            <tr th:if="${evaluacionDTO.id}">
+                <td>Id Evaluación</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{id}" readonly /></td>
+            </tr>
+
+            <!-- Campo oculto para ID del cliente -->
+            <tr>
+                <td>Id Cliente</td>
+                <td>:</td>
+                <td><input type="text" th:field="*{clienteDTO.id}" readonly /></td>
+            </tr>
+
+            <tr>
+                <td>Peso actual (kg)</td>
+                <td>:</td>
+                <td><input type="number" th:field="*{pesoActual}" step="0.1" min="0" required /></td>
+            </tr>
+
+            <tr>
+                <td>Altura (m)</td>
+                <td>:</td>
+                <td><input type="number" th:field="*{altura}" step="0.01" min="0" required /></td>
+            </tr>
+
+            <tr>
+                <td>Edad</td>
+                <td>:</td>
+                <td><input type="number" th:field="*{edad}" min="0" required /></td>
+            </tr>
+
+            <tr>
+                <td>Objetivo</td>
+                <td>:</td>
+                <td>
+                    <select th:field="*{objetivo}" required>
+                        <option value="">Seleccione objetivo</option>
+                        <option value="bajar_peso">Bajar de peso</option>
+                        <option value="ganar_masa_muscular">Ganar masa muscular</option>
+                        <option value="mantener_peso">Mantener peso</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Actividad</td>
+                <td>:</td>
+                <td>
+                    <select th:field="*{actividad}" required>
+                        <option value="">Seleccione nivel de actividad</option>
+                        <option value="baja">Baja</option>
+                        <option value="moderada">Moderada</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Restricciones</td>
+                <td>:</td>
+                <td>
+                    <input type="text" th:field="*{restricciones}" placeholder="Ej: Vegana, Sin gluten" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>Observaciones</td>
+                <td>:</td>
+                <td>
+                    <textarea th:field="*{observaciones}" rows="3" cols="30" placeholder="Observaciones adicionales"></textarea>
+                </td>
+            </tr>
+
+        </table>
+
+        <br>
+        <input type="submit" th:value="${add} ? 'Crear Evaluación' : 'Actualizar Evaluación'" />
+
+    </form>
+
+    <br>
+    <a th:href="@{/cliente/dashboard/{idCliente}(idCliente=${evaluacionDTO.clienteDTO.id})}">Volver al Dashboard</a>
+
+</body>
+</html>
+
