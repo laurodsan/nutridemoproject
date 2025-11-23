@@ -1,57 +1,196 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Evaluación Inicial</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Evaluación Inicial</title>
+
+<!-- Bootstrap -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+	rel="stylesheet">
+
+<!-- CSS principal -->
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap"
+	rel="stylesheet" />
 </head>
 
 <body>
-    <h1>Evaluación Inicial del Cliente</h1>
-    <br>
 
-    <table border="1">
-        <tr>
-            <td>Id Evaluación</td>
-            <td th:text="${evaluacionDTO.id}">1</td>
-        </tr>
-        <tr>
-            <td>Id Cliente</td>
-            <td th:text="${evaluacionDTO.clienteDTO.id}">8</td>
-        </tr>
-        <tr>
-            <td>Peso actual (kg)</td>
-            <td th:text="${evaluacionDTO.pesoActual}">70</td>
-        </tr>
-        <tr>
-            <td>Altura (m)</td>
-            <td th:text="${evaluacionDTO.altura}">1.75</td>
-        </tr>
-        <tr>
-            <td>Edad</td>
-            <td th:text="${evaluacionDTO.edad}">30</td>
-        </tr>
-        <tr>
-            <td>Objetivo</td>
-            <td th:text="${evaluacionDTO.objetivo}">Bajar de peso</td>
-        </tr>
-        <tr>
-            <td>Actividad</td>
-            <td th:text="${evaluacionDTO.actividad}">Moderada</td>
-        </tr>
-        <tr>
-            <td>Restricciones</td>
-            <td th:text="${evaluacionDTO.restricciones}">Vegana</td>
-        </tr>
-        <tr>
-            <td>Observaciones</td>
-            <td th:text="${evaluacionDTO.observaciones}">No fuma, sin alergias</td>
-        </tr>
-    </table>
+	<!-- =======================================================
+    🔹 NAVBAR SUPERIOR
+======================================================= -->
+	<header
+		class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+		<div
+			class="container d-flex justify-content-between align-items-center">
 
-    <br>
-    <!-- Botón para volver al dashboard del cliente -->
-    <a th:href="@{/cliente/dashboard/{idCliente}(idCliente=${evaluacionDTO.clienteDTO.id})}">Volver al Dashboard</a>
+			<a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+				<img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo"
+				height="40" class="me-2" />
+			</a>
+
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse justify-content-between"
+				id="navbarNav">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link" href="#">Planes</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Preguntas
+							frecuentes</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Sobre
+							nosotros</a></li>
+				</ul>
+
+				<div class="d-flex align-items-center">
+					<a class="btn btn-outline-primary me-2" href="/logout">Cerrar
+						sesión</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<div style="height: 80px;"></div>
+
+	<!-- =======================================================
+    🔹 LAYOUT PRINCIPAL
+======================================================= -->
+	<div class="container-fluid">
+		<div class="row">
+
+			<!-- =======================================================
+            🔹 SIDEBAR
+        ======================================================== -->
+			<nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4"
+				style="min-height: 100vh;">
+				<div class="sidebar-sticky px-3">
+
+					<h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi
+						Panel</h5>
+
+					<ul class="nav flex-column">
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/cliente/dashboard/{id}(id=${evaluacionDTO.clienteDTO.id})}">
+								<i class="bi bi-person-circle me-2"></i> Información del cliente
+						</a></li>
+
+						<li class="nav-item mb-2"><a
+							class="nav-link sidebar-link active"
+							th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${evaluacionDTO.clienteDTO.id})}">
+								<i class="bi bi-clipboard-check me-2"></i> Evaluación inicial
+						</a></li>
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							href="#"> <i class="bi bi-graph-up-arrow me-2"></i> Progreso
+								semanal
+						</a></li>
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							href="#"> <i class="bi bi-card-checklist me-2"></i> Menú
+						</a></li>
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							href="#"> <i class="bi bi-calendar-week me-2"></i> Agendar
+								cita
+						</a></li>
+					</ul>
+				</div>
+			</nav>
+
+			<!-- =======================================================
+            🔹 CONTENIDO PRINCIPAL (solo visualización de evaluación)
+        ======================================================== -->
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+
+				<br>
+
+				<h2 class="fw-bold mb-4">Evaluación Inicial del Cliente</h2>
+
+				<div class="card shadow-sm p-4">
+
+					<table class="table table-borderless">
+
+						<input type="hidden" th:value="${evaluacionDTO.id}">
+						<input type="hidden" th:value="${evaluacionDTO.clienteDTO.id}">
+
+
+						<tr>
+							<th>Peso actual (kg)</th>
+							<td th:text="${evaluacionDTO.pesoActual}"></td>
+						</tr>
+
+						<tr>
+							<th>Altura (cm)</th>
+							<td th:text="${evaluacionDTO.altura}"></td>
+						</tr>
+
+						<tr>
+							<th>Edad</th>
+							<td th:text="${evaluacionDTO.edad}"></td>
+						</tr>
+
+						<tr>
+							<th>Objetivo</th>
+							<td th:switch="${evaluacionDTO.objetivo}"><span
+								th:case="'bajar_peso'">Bajar de peso</span> <span
+								th:case="'ganar_masa_muscular'">Ganar masa muscular</span> <span
+								th:case="'mantener_peso'">Mantener peso</span></td>
+						</tr>
+
+						<tr>
+							<th>Actividad</th>
+							<td th:switch="${evaluacionDTO.actividad}"><span
+								th:case="'sedentario'">Sedentario</span> <span
+								th:case="'ligera'">Actividad ligera</span> <span
+								th:case="'moderada'">Actividad moderada</span> <span
+								th:case="'alta'">Actividad alta</span></td>
+
+						</tr>
+
+						<tr>
+							<th>Restricciones</th>
+							<td th:switch="${evaluacionDTO.restricciones}"><span
+								th:case="'vegana'">Vegana</span> <span th:case="'vegetariana'">Vegetariana</span>
+								<span th:case="'sin_gluten'">Sin gluten</span> <span
+								th:case="'sin_lactosa'">Sin lactosa</span> <span
+								th:case="'halal'">Halal</span> <span th:case="'alergias'">Alergias</span>
+								<span th:case="*">Sin restricciones</span></td>
+
+						</tr>
+
+						<tr>
+							<th>Observaciones</th>
+							<td th:text="${evaluacionDTO.observaciones}"></td>
+						</tr>
+					</table>
+
+				</div>
+
+				<br> <a class="btn btn-custom-outline"
+					th:href="@{/cliente/dashboard/{idCliente}(idCliente=${evaluacionDTO.clienteDTO.id})}">
+					Volver al Dashboard </a>
+
+			</main>
+		</div>
+	</div>
+
+	<!-- Bootstrap JS -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
-
 </html>
+

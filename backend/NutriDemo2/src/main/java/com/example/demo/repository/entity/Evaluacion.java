@@ -41,8 +41,6 @@ public class Evaluacion {
 
     private String objetivo;
 
-    private String preferencias;
-
     private String restricciones;
 
     private String observaciones;

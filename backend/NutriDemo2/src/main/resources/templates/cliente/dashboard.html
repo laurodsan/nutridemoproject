@@ -1,34 +1,163 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${titulo}">Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Cliente</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- CSS principal -->
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+
+<!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap"
+    rel="stylesheet" />
 </head>
+
 <body>
+  <!-- 🔹 Navbar superior (igual que tu estilo) -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
 
-<h1>Bienvenido, <span th:text="${clienteDTO.nombre}">Nombre</span></h1>
+      <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+        <img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo" height="40" class="me-2" />
+      </a>
 
-<p><strong>Email:</strong> <span th:text="${clienteDTO.email}"></span></p>
-<p><strong>Plan actual:</strong> <span th:text="${clienteDTO.planDTO.nombre}"></span></p>
-<p><strong>Fecha registro:</strong> <span th:text="${clienteDTO.fechaRegistro}"></span></p>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-<hr>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#">Planes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Preguntas frecuentes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Sobre nosotros</a></li>
+        </ul>
 
-<h2>Accesos rápidos</h2>
-<ul>
+        <div class="d-flex align-items-center">
+          <a class="btn btn-outline-primary me-2" href="/logout">Cerrar sesión</a>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<li>
-    <a th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${clienteDTO.id})}">
-        Evaluación inicial
-    </a>
-</li>
+  <!-- 🔹 Espacio del navbar -->
+  <div style="height: 80px;"></div>
 
+  <!-- 🔹 Layout principal -->
+  <div class="container-fluid">
+    <div class="row">
 
-    <li><a href="#">Programa</a></li>
-    <li><a href="#">Menús</a></li>
-    <li><a href="#">Agenda de citas</a></li>
-</ul>
+      <!-- ===========================
+           🔹 SIDEBAR IZQUIERDO
+      ============================ -->
+      <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4" style="min-height: 100vh;">
 
+        <div class="sidebar-sticky px-3">
+
+          <h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi Panel</h5>
+
+          <ul class="nav flex-column">
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link" th:href="@{/cliente/dashboard/{id}(id=${clienteDTO.id})}">
+                <i class="bi bi-person-circle me-2"></i> Información del cliente
+              </a>
+            </li>
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link"
+                th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${clienteDTO.id})}">
+                <i class="bi bi-clipboard-check me-2"></i> Evaluación inicial
+              </a>
+            </li>
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link" href="#">
+                <i class="bi bi-graph-up-arrow me-2"></i> Progreso semanal
+              </a>
+            </li>
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link" href="#">
+                <i class="bi bi-card-checklist me-2"></i> Menú
+              </a>
+            </li>
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link" href="#">
+                <i class="bi bi-calendar-week me-2"></i> Agendar cita
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+
+      <!-- ===========================
+           🔹 CONTENIDO A LA DERECHA
+      ============================ -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+
+        <br>
+
+        <h2 class="fw-bold mb-4">Bienvenido, <span th:text="${clienteDTO.nombre}"></span></h2>
+
+        <div class="row g-4">
+
+          <!-- Tarjeta: Resumen del cliente -->
+          <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+              <h5 class="fw-bold mb-3">Tu Información</h5>
+
+              <p><strong>Nombre:</strong> <span th:text="${clienteDTO.nombre + ' ' + clienteDTO.apellido}"></span></p>
+              <p><strong>Email:</strong> <span th:text="${clienteDTO.email}"></span></p>
+              <p><strong>Plan actual:</strong> <span th:text="${clienteDTO.planDTO.nombre}"></span></p>
+              <p><strong>Fecha de registro:</strong> <span th:text="${clienteDTO.fechaRegistro}"></span></p>
+
+              <a th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${clienteDTO.id})}"
+                 class="btn btn-primary btn-lg">
+                Ver / Realizar Evaluación Inicial
+              </a>
+            </div>
+          </div>
+
+          <!-- Tarjeta: Estado de evaluación -->
+          <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+              <h5 class="fw-bold mb-3">Estado de tu Evaluación</h5>
+
+              <p th:if="${evaluacion == null}" class="text-danger fw-bold">
+                ❌ Aún no has completado tu evaluación inicial.
+              </p>
+
+              <div th:if="${evaluacion != null}">
+                <p><strong>Peso actual:</strong> <span th:text="${evaluacion.pesoActual}"></span> kg</p>
+                <p><strong>Objetivo:</strong> <span th:text="${evaluacion.objetivo}"></span></p>
+                <p><strong>Actividad:</strong> <span th:text="${evaluacion.actividad}"></span></p>
+              </div>
+
+              <a th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${clienteDTO.id})}"
+                 class="btn btn-primary btn-lg">
+                Ver detalles
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
 
+</html>

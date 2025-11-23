@@ -1,5 +1,7 @@
 package com.example.demo.web.controller;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,10 @@ public class EvaluacionController {
 	                                   @ModelAttribute("evaluacionDTO") EvaluacionDTO evaluacionDTO) {
 
 		log.info("EvaluacionController - save: Guardar evaluación del cliente " + idCliente);
+		
+		if (evaluacionDTO.getFecha() == null) {
+			evaluacionDTO.setFecha(new Date());
+	    }
 
 		evaluacionDTO.getClienteDTO().setId(idCliente); // aseguramos ID
 
