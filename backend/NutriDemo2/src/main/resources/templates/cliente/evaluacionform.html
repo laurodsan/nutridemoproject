@@ -10,8 +10,6 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
 	rel="stylesheet">
-
-<!-- Bootstrap Icons -->
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
 	rel="stylesheet">
@@ -27,57 +25,52 @@
 
 <body>
 
-	<!-- =======================================================
-     🔹 NAVBAR SUPERIOR
-======================================================= -->
-	<header
-		class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+	<!-- 🔹 Menu -->
+	<header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
 		<div
 			class="container d-flex justify-content-between align-items-center">
-
-			<a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-				<img th:src="@{/img/NutriDemoLogo.svg}"
-				alt="NutriDemo logo" height="40" class="me-2" />
+			<!-- Logo -->
+			<a class="navbar-brand d-flex align-items-center" th:href="@{/}"> <img
+				th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo" height="40"
+				class="me-2" />
 			</a>
 
+			<!-- Botón móvil -->
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarNav">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 
+			<!-- Contenido del navbar -->
 			<div class="collapse navbar-collapse justify-content-between"
 				id="navbarNav">
+				<!-- Secciones izquierda -->
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item"><a class="nav-link" href="#">Planes</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Preguntas
-							frecuentes</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Sobre
+					<li class="nav-item"><a class="nav-link" th:href="@{/planes}">Planes</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/preguntas}">Preguntas frecuentes</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/sobre}">Sobre
 							nosotros</a></li>
 				</ul>
 
 				<div class="d-flex align-items-center">
-					<a class="btn btn-outline-primary me-2" href="/logout">Cerrar
+					<a class="btn btn-outline-primary" th:href="@{/logout}">Cerrar
 						sesión</a>
 				</div>
 			</div>
+
 		</div>
 	</header>
 
-	<!-- Espacio para navbar -->
 	<div style="height: 80px;"></div>
 
 
-	<!-- =======================================================
-     🔹 LAYOUT PRINCIPAL
-======================================================= -->
+	<!-- LAYOUT PRINCIPAL -->
 	<div class="container-fluid">
 		<div class="row">
 
-			<!-- =======================================================
-             🔹 SIDEBAR
-        ======================================================== -->
-			<nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4"
-				style="min-height: 100vh;">
+			<!-- SIDEBAR -->
+			<nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4 sidebar-fixed">
 				<div class="sidebar-sticky px-3">
 
 					<h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi
@@ -85,49 +78,55 @@
 
 					<ul class="nav flex-column">
 
+						<!-- Información del cliente -->
 						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
 							th:href="@{/cliente/dashboard/{id}(id=${evaluacionDTO.clienteDTO.id})}">
 								<i class="bi bi-person-circle me-2"></i> Información del cliente
 						</a></li>
 
+						<!-- Evaluación inicial -->
 						<li class="nav-item mb-2"><a
 							class="nav-link sidebar-link active"
 							th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${evaluacionDTO.clienteDTO.id})}">
 								<i class="bi bi-clipboard-check me-2"></i> Evaluación inicial
 						</a></li>
 
+						<!-- Progreso semanal -->
 						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
-							href="#"> <i class="bi bi-graph-up-arrow me-2"></i> Progreso
-								semanal
+							th:href="@{/cliente/dashboard/{idCliente}/progreso(idCliente=${evaluacionDTO.clienteDTO.id})}">
+								<i class="bi bi-graph-up-arrow me-2"></i> Progreso semanal
 						</a></li>
 
+						<!-- Menú semanal -->
 						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
-							href="#"> <i class="bi bi-card-checklist me-2"></i> Menú
+							th:href="@{/cliente/{idCliente}/menus(idCliente=${evaluacionDTO.clienteDTO.id})}">
+								<i class="bi bi-card-checklist me-2"></i> Menú semanal
 						</a></li>
 
-						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
-							href="#"> <i class="bi bi-calendar-week me-2"></i> Agendar
-								cita
-						</a></li>
+						<!-- Citas -->
+						<li class="nav-item mb-2"
+							th:if="${evaluacionDTO.clienteDTO.planDTO != null 
+	        and evaluacionDTO.clienteDTO.planDTO.citasIncluidas > 0}">
+							<a class="nav-link sidebar-link"
+							th:href="@{/cliente/dashboard/{idCliente}/citas(idCliente=${evaluacionDTO.clienteDTO.id})}">
+								<i class="bi bi-calendar-week me-2"></i> Citas
+						</a>
+						</li>
 
 					</ul>
 				</div>
 			</nav>
 
 
-			<!-- =======================================================
-             🔹 CONTENIDO PRINCIPAL
-        ======================================================== -->
+			<!-- CONTENIDO PRINCIPAL -->
 			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
-				
+
 				<br>
 
 				<h2 class="fw-bold mb-4"
 					th:text="${add} ? 'Evaluación Inicial' : 'Actualizar Evaluación Inicial'"></h2>
 
 				<!-- FORMULARIO -->
-				
-
 				<form
 					th:action="@{/cliente/dashboard/{idCliente}/evaluacion/save(idCliente=${evaluacionDTO.clienteDTO.id})}"
 					th:object="${evaluacionDTO}" method="post">
@@ -188,21 +187,23 @@
 
 						<tr>
 							<td>Restricciones</td>
-							<td><select th:field="*{restricciones}" class="form-select">
+							<td><select th:field="*{restricciones}" class="form-select"
+								required>
 									<option value="">Seleccione una opción</option>
 									<option value="vegana">Vegana</option>
 									<option value="vegetariana">Vegetariana</option>
 									<option value="sin_gluten">Sin gluten</option>
 									<option value="sin_lactosa">Sin lactosa</option>
-									<option value="halal">Halal</option>
-									<option value="alergias">Alergias</option>
+									<option value="rendimiento">Alto rendimiento</option>
+									<option value="sin_restricciones">Sin restricciones</option>
 							</select></td>
 						</tr>
 
 						<tr>
 							<td>Observaciones</td>
 							<td><textarea th:field="*{observaciones}" rows="3"
-									class="form-control" placeholder="Observaciones adicionales"></textarea></td>
+									class="form-control" placeholder="Observaciones adicionales"></textarea>
+							</td>
 						</tr>
 
 					</table>
@@ -226,6 +227,4 @@
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>
-

@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.dto.ClienteDTO;
+import com.example.demo.model.dto.NutricionistaDTO;
 import com.example.demo.service.ClienteService;
+import com.example.demo.service.NutricionistaService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -19,6 +21,9 @@ public class LoginController {
 
 	@Autowired
 	private ClienteService clienteService;
+	
+	 @Autowired
+	 private NutricionistaService nutricionistaService;
 
 
 	// Mostrar formulario de login
@@ -41,6 +46,8 @@ public class LoginController {
 	        @RequestParam String rol,
 	        HttpSession session) {
 
+		//LOGIN CLIENTE
+		
 	    if ("cliente".equals(rol)) {
 
 	        ClienteDTO clienteDTO = clienteService.loginCliente(email, password);
@@ -52,13 +59,29 @@ public class LoginController {
 	            return mav;
 	        }
 	        
-	        
 
 	        //GUARDAR CLIENTE EN LA SESIÓN
 	        session.setAttribute("clienteLogueado", clienteDTO);
 
 	        return new ModelAndView("redirect:/cliente/dashboard/" + clienteDTO.getId());
 	    }
+	    
+	    //LOGIN NUTRICIONISTA
+        if ("nutricionista".equals(rol)) {
+
+            NutricionistaDTO nutricionistaDTO = nutricionistaService.loginNutricionista(email, password);
+
+            if (nutricionistaDTO == null) {
+                ModelAndView mav = new ModelAndView("login");
+                mav.addObject("errorMessage", "Correo o contraseña incorrectos");
+                mav.addObject("titulo", "NutriDemo | Iniciar sesión");
+                return mav;
+            }
+
+            session.setAttribute("nutricionistaLogueado", nutricionistaDTO);
+
+            return new ModelAndView("redirect:/nutricionista/dashboard/" + nutricionistaDTO.getId());
+        }
 
 	    ModelAndView mav = new ModelAndView("login");
 	    mav.addObject("errorMessage", "Debes seleccionar un rol");

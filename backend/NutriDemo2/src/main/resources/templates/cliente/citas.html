@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Citas</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- 🔹 Menu -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container d-flex justify-content-between align-items-center">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+        <img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo" height="40" class="me-2" />
+      </a>
+
+      <!-- Botón móvil -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Contenido del navbar -->
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <!-- Secciones izquierda -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" th:href="@{/planes}">Planes</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/preguntas}">Preguntas frecuentes</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/sobre}">Sobre nosotros</a></li>
+        </ul>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+                <div>
+                    <a class="btn btn-outline-primary" th:href="@{/logout}">Cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div style="height: 80px;"></div>
+    
+    <div class="container-fluid">
+        <div class="row">
+
+            <!-- SIDEBAR -->
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4 sidebar-fixed">
+                <div class="sidebar-sticky px-3">
+
+                    <h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi Panel</h5>
+
+                    <ul class="nav flex-column">
+
+                        <!-- Info cliente -->
+                        <li class="nav-item mb-2">
+                            <a class="nav-link sidebar-link" th:href="@{/cliente/dashboard/{id}(id=${clienteDTO.id})}">
+                                <i class="bi bi-person-circle me-2"></i> Información del cliente
+                            </a>
+                        </li>
+
+                        <!-- Evaluación -->
+                        <li class="nav-item mb-2">
+                            <a class="nav-link sidebar-link"
+                               th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${clienteDTO.id})}">
+                                <i class="bi bi-clipboard-check me-2"></i> Evaluación inicial
+                            </a>
+                        </li>
+
+                        <!-- Progreso -->
+                        <li class="nav-item mb-2">
+                            <a class="nav-link sidebar-link"
+                               th:href="@{/cliente/dashboard/{idCliente}/progreso(idCliente=${clienteDTO.id})}">
+                                <i class="bi bi-graph-up-arrow me-2"></i> Progreso semanal
+                            </a>
+                        </li>
+
+                        <!-- Menú -->
+                        <li class="nav-item mb-2" th:if="${clienteDTO.listaMenus != null and !clienteDTO.listaMenus.isEmpty()}">
+                            <a class="nav-link sidebar-link"
+                               th:href="@{/cliente/{idCliente}/menus(idCliente=${clienteDTO.id})}">
+                                <i class="bi bi-card-checklist me-2"></i> Menú semanal
+                            </a>
+                        </li>
+
+                        <!-- Citas (ACTIVO) -->
+                        <li class="nav-item mb-2" th:if="${clienteDTO.planDTO.citasIncluidas > 0}">
+                            <a class="nav-link sidebar-link active"
+                               th:href="@{/cliente/dashboard/{idCliente}/citas(idCliente=${clienteDTO.id})}">
+                                <i class="bi bi-calendar-week me-2"></i> Citas
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </nav>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+
+                <br>
+
+                <h2 class="fw-bold mb-4">
+                    Citas de <span th:text="${clienteDTO.nombre}"></span>
+                </h2>
+
+                <!-- CONTADOR DE CITAS -->
+                <p class="text-muted mb-3">
+                    <strong th:text="${listaCitasDTO.size()}"></strong> /
+                    <strong th:text="${clienteDTO.planDTO.citasIncluidas}"></strong>
+                    citas realizadas
+                </p>
+
+                <!-- BOTÓN: Solicitar cita -->
+                <a class="btn btn-primary mb-3"
+                   th:if="${listaCitasDTO.size() < clienteDTO.planDTO.citasIncluidas}"
+                   th:href="@{/cliente/dashboard/{idCliente}/citas/add(idCliente=${clienteDTO.id})}">
+                    <i class="bi bi-plus-circle me-2"></i> Solicitar nueva cita
+                </a>
+
+                <button class="btn btn-secondary mb-3"
+                        th:if="${listaCitasDTO.size() >= clienteDTO.planDTO.citasIncluidas}"
+                        disabled>
+                    <i class="bi bi-x-circle me-2"></i> No puedes solicitar más citas
+                </button>
+
+                <!-- MENSAJE INFORMATIVO -->
+                <p class="text-danger fw-bold"
+                   th:if="${listaCitasDTO.size() >= clienteDTO.planDTO.citasIncluidas}">
+                    Has alcanzado el número máximo de citas incluidas en tu plan.
+                </p>
+
+                <!-- TABLA DE CITAS -->
+                <div class="table-responsive-mobile">
+                <table class="table table-bordered align-middle">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Motivo</th>
+                            <th>Estado</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="c : ${listaCitasDTO}">
+                            <td th:text="${#dates.format(c.fechaHora, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${#dates.format(c.fechaHora, 'HH:mm')}"></td>
+                            <td th:text="${c.motivo}"></td>
+                            <td th:text="${c.estado}"></td>
+                            <td th:text="${c.notas}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+
+                <!-- mensaje si no hay citas -->
+                <p th:if="${listaCitasDTO == null || listaCitasDTO.isEmpty()}"
+                   class="text-danger fw-bold mt-3">
+                    Todavía no tienes citas registradas.
+                </p>
+
+            </main>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

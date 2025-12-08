@@ -18,6 +18,9 @@ public class EvaluacionServiceImpl implements EvaluacionService{
 	
 	@Autowired
 	private EvaluacionRepository evaluacionRepository;
+	
+	@Autowired
+	private ClienteService clienteService;
 
 	@Override
 	public void save(EvaluacionDTO evaluacionDTO) {
@@ -39,20 +42,24 @@ public class EvaluacionServiceImpl implements EvaluacionService{
 
 	    log.info("EvaluacionServiceImpl - findByClienteId: Buscar evaluación del cliente: " + idCliente);
 
-	    // Buscar la evaluación por el id del cliente en el repositorio
 	    Evaluacion evaluacion = evaluacionRepository.findByClienteId(idCliente);
 
 	    if (evaluacion != null) {
-	        // Convertir la entidad a DTO
-	        ClienteDTO clienteDTO = new ClienteDTO();
-	        clienteDTO.setId(idCliente);
+
+	        ClienteDTO clienteDTO = clienteService.findById(
+	                new ClienteDTO() {{
+	                    setId(idCliente);
+	                }}
+	        );
 
 	        EvaluacionDTO evaluacionDTO = EvaluacionDTO.converToDTO(evaluacion, clienteDTO);
+
 	        return evaluacionDTO;
-	    } else {
-	        return null; // No existe evaluación
-	    }
+	    } 
+	  
+	    return null;
 	}
+
 
 
 }

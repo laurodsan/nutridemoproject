@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${add} ? 'Nuevo Nutricionista' : 'Editar Nutricionista'"></title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+
+<body>
+
+ <!-- 🔹 Menu -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container d-flex justify-content-between align-items-center">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+        <img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo" height="40" class="me-2" />
+      </a>
+
+      <!-- Botón móvil -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Contenido del navbar -->
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <!-- Secciones izquierda -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" th:href="@{/planes}">Planes</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/preguntas}">Preguntas frecuentes</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/sobre}">Sobre nosotros</a></li>
+        </ul>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <a class="btn btn-outline-primary" th:href="@{/logout}">Cerrar sesión</a>
+        </div>
+
+    </div>
+</header>
+
+<div style="height: 80px;"></div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- SIDEBAR -->
+        <nav class="col-12 col-md-3 col-lg-2 d-md-block bg-light sidebar py-4 sidebar-fixed">
+            <div class="sidebar-sticky px-3">
+
+                <h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi Panel</h5>
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link sidebar-link"
+                           th:href="@{/nutricionista/dashboard/{id}(id=${nutricionistaDTO.id})}">
+                            <i class="bi bi-person-lines-fill me-2"></i> Mi Información
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link sidebar-link"
+                           th:href="@{/nutricionista/{id}/clientes(id=${nutricionistaDTO.id})}">
+                            <i class="bi bi-card-checklist me-2"></i> Clientes asignados
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link sidebar-link"
+                           th:href="@{/nutricionista/{id}/menus(id=${nutricionistaDTO.id})}">
+                            <i class="bi bi-card-checklist me-2"></i> Crear menús
+                        </a>
+                    </li>
+
+                    <li class="nav-item mb-2">
+                        <a class="nav-link sidebar-link"
+                           th:href="@{/nutricionista/{id}/citas(id=${nutricionistaDTO.id})}">
+                            <i class="bi bi-calendar-week me-2"></i> Citas
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </nav>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+
+            <h2 class="fw-bold mb-4" th:text="${add} ? 'Nuevo Nutricionista' : 'Editar Información'"></h2>
+
+            <div class="card shadow-sm p-4">
+
+                <!-- 🚀 FORMULARIO CORREGIDO -->
+                <form th:action="@{/nutricionista/dashboard/{id}/save(id=${nutricionistaDTO.id})}"
+                      th:object="${nutricionistaDTO}"
+                      method="post">
+
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nombre</label>
+                        <input type="text" th:field="*{nombre}" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input type="email" th:field="*{email}" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Contraseña</label>
+                        <input type="password" th:field="*{password}" class="form-control" required />
+                    </div>
+
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-save me-2"></i> Guardar cambios
+                    </button>
+
+                    <a class="btn btn-secondary ms-2"
+                       th:href="@{/nutricionista/dashboard/{id}(id=${nutricionistaDTO.id})}">
+                        Volver
+                    </a>
+
+                </form>
+
+            </div>
+
+        </main>
+
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

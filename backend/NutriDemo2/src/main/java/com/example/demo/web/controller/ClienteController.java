@@ -9,12 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.dto.ClienteDTO;
+import com.example.demo.model.dto.NutricionistaDTO;
 import com.example.demo.model.dto.PlanDTO;
 import com.example.demo.service.ClienteService;
+import com.example.demo.service.NutricionistaService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,6 +26,9 @@ public class ClienteController {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private NutricionistaService nutricionistaService;
 
 	private static final Logger log = LoggerFactory.getLogger(ClienteController.class);
 	
@@ -69,6 +75,25 @@ public class ClienteController {
 
 	    //Redirigir a su dashboard
 	    return new ModelAndView("redirect:/cliente/dashboard");
+	}
+	
+	//Lista de clientes de un nutricionsta
+	@GetMapping("/nutricionista/{idNutricionista}/clientes")
+	public ModelAndView findAllByNutricionista(@PathVariable Long idNutricionista) {
+
+		log.info("ClienteController - findAll: Mostramos todos los clientes del nutricionista " + idNutricionista);
+
+		NutricionistaDTO nutricionistaDTO = new NutricionistaDTO();
+		nutricionistaDTO.setId(idNutricionista);
+		nutricionistaDTO = nutricionistaService.findById(nutricionistaDTO);
+
+		List<ClienteDTO> listaClientesDTO = clienteService.findAllByNutricionista(nutricionistaDTO);
+
+		ModelAndView mav = new ModelAndView("nutricionista/clientes-asignados");
+		mav.addObject("nutricionistaDTO", nutricionistaDTO);
+		mav.addObject("listaClientesDTO", listaClientesDTO);
+
+		return mav;
 	}
 
 }

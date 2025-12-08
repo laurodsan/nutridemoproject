@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title th:text="${add} ? 'Nueva cita' : 'Actualizar cita'"></title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+	rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+
+</head>
+
+<body>
+
+	<!-- 🔹 Menu -->
+	<header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+		<div
+			class="container d-flex justify-content-between align-items-center">
+			<!-- Logo -->
+			<a class="navbar-brand d-flex align-items-center" th:href="@{/}"> <img
+				th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo" height="40"
+				class="me-2" />
+			</a>
+
+			<!-- Botón móvil -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Contenido del navbar -->
+			<div class="collapse navbar-collapse justify-content-between"
+				id="navbarNav">
+				<!-- Secciones izquierda -->
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link" th:href="@{/planes}">Planes</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/preguntas}">Preguntas frecuentes</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/sobre}">Sobre
+							nosotros</a></li>
+				</ul>
+
+
+				<div class="collapse navbar-collapse justify-content-between"
+					id="navbarNav">
+					<div class="d-flex align-items-center">
+						<a class="btn btn-outline-primary" th:href="@{/logout}">Cerrar
+							sesión</a>
+					</div>
+				</div>
+
+			</div>
+	</header>
+
+	<div style="height: 80px;"></div>
+
+	<!-- LAYOUT PRINCIPAL -->
+	<div class="container-fluid">
+		<div class="row">
+
+			<!-- SIDEBAR -->
+			<nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4 sidebar-fixed">
+				<div class="sidebar-sticky px-3">
+
+					<h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi
+						Panel</h5>
+
+					<ul class="nav flex-column">
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/cliente/dashboard/{idCliente}(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-person-circle me-2"></i> Información del cliente
+						</a></li>
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-clipboard-check me-2"></i> Evaluación inicial
+						</a></li>
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/cliente/dashboard/{idCliente}/progreso(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-graph-up-arrow me-2"></i> Progreso semanal
+						</a></li>
+
+						<li class="nav-item mb-2"
+							th:if="${clienteDTO.listaMenus != null and !clienteDTO.listaMenus.isEmpty()}">
+							<a class="nav-link sidebar-link"
+							th:href="@{/cliente/{idCliente}/menus(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-card-checklist me-2"></i> Menú semanal
+						</a>
+						</li>
+
+						<!-- Citas (ACTIVO) -->
+						<li class="nav-item mb-2"
+							th:if="${clienteDTO.planDTO.citasIncluidas > 0}"><a
+							class="nav-link sidebar-link active"
+							th:href="@{/cliente/dashboard/{idCliente}/citas(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-calendar-week me-2"></i> Citas
+						</a></li>
+
+					</ul>
+
+				</div>
+			</nav>
+
+			<!-- CONTENIDO PRINCIPAL -->
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+
+				<br>
+
+				<h2 class="fw-bold mb-4"
+					th:text="${add} ? 'Solicitar nueva cita' : 'Actualizar cita'"></h2>
+
+				<div class="card shadow-sm p-4">
+
+					<div th:if="${errorMessage}" class="alert alert-danger">
+						<p th:text="${errorMessage}"></p>
+					</div>
+
+					<form
+						th:action="@{/cliente/dashboard/{idCliente}/citas/save(idCliente=${clienteDTO.id})}"
+						th:object="${citaDTO}" method="post">
+
+						<input type="hidden" th:field="*{id}"> <input
+							type="hidden" th:field="*{clienteDTO.id}"> <input
+							type="hidden" th:field="*{nutricionistaDTO.id}">
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<label class="form-label fw-semibold">Fecha y hora</label> <input
+									type="datetime-local" th:field="*{fechaHora}"
+									class="form-control" required>
+							</div>
+
+							<div class="col-md-6">
+								<label class="form-label fw-semibold">Motivo</label> <input
+									type="text" th:field="*{motivo}" class="form-control" required>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label fw-semibold">Notas</label>
+							<textarea th:field="*{notas}" rows="3" class="form-control"></textarea>
+						</div>
+
+						<button type="submit" class="btn btn-primary">
+							<i class="bi bi-save me-2"></i> Guardar
+						</button>
+
+						<a class="btn btn-secondary ms-2"
+							th:href="@{/cliente/dashboard/{idCliente}/citas(idCliente=${clienteDTO.id})}">
+							Volver </a>
+
+					</form>
+
+				</div>
+
+			</main>
+
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

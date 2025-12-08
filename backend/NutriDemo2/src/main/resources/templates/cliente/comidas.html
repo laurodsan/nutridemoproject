@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Comidas del Menú</title>
+
+<!-- Bootstrap -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+	rel="stylesheet">
+
+<!-- CSS principal -->
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap"
+	rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- 🔹 Menu -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container d-flex justify-content-between align-items-center">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+        <img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo" height="40" class="me-2" />
+      </a>
+
+      <!-- Botón móvil -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Contenido del navbar -->
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <!-- Secciones izquierda -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" th:href="@{/planes}">Planes</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/preguntas}">Preguntas frecuentes</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/sobre}">Sobre nosotros</a></li>
+        </ul>
+
+
+				<div class="d-flex align-items-center">
+					<a class="btn btn-outline-primary" th:href="@{/logout}">Cerrar sesión</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<div style="height: 80px;"></div>
+
+	<div class="container-fluid">
+		<div class="row">
+
+			<!-- SIDEBAR -->
+			<nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4 sidebar-fixed">
+				<div class="sidebar-sticky px-3">
+
+					<h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi
+						Panel</h5>
+
+					<ul class="nav flex-column">
+
+						<!-- Info cliente -->
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/cliente/dashboard/{id}(id=${clienteDTO.id})}"> <i
+								class="bi bi-person-circle me-2"></i> Información del cliente
+						</a></li>
+
+						<!-- Evaluación -->
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/cliente/dashboard/{idCliente}/evaluacion(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-clipboard-check me-2"></i> Evaluación inicial
+						</a></li>
+
+						<!-- Progreso semanal -->
+						<li class="nav-item mb-2"><a
+							class="nav-link sidebar-link active"
+							th:href="@{/cliente/dashboard/{idCliente}/progreso(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-graph-up-arrow me-2"></i> Progreso semanal
+						</a></li>
+
+						<!-- Menú semanal (ACTIVO) -->
+						<li class="nav-item mb-2"><a
+							class="nav-link sidebar-link active"
+							th:href="@{/cliente/{idCliente}/menus(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-card-checklist me-2"></i> Menú semanal
+						</a></li>
+
+						<!-- Citas -->
+						<li class="nav-item mb-2"
+							th:if="${clienteDTO.planDTO.citasIncluidas > 0}"><a
+							class="nav-link sidebar-link"
+							th:href="@{/cliente/dashboard/{idCliente}/citas(idCliente=${clienteDTO.id})}">
+								<i class="bi bi-calendar-week me-2"></i> Citas
+						</a></li>
+
+
+
+					</ul>
+
+				</div>
+			</nav>
+
+
+			<!-- CONTENIDO -->
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+
+				<br>
+
+				<h2 class="fw-bold mb-2">
+					Menú de <span th:text="${clienteDTO.nombre}"></span>
+				</h2>
+
+				<h5 class="text-secondary mb-4"
+					th:text="'Descripción: ' + ${menuDTO.descripcion}"></h5>
+
+
+				<!-- TABLA DE COMIDAS -->
+				<div class="table-responsive-mobile">
+				<table class="table table-bordered align-middle shadow-sm">
+					<thead class="table-light">
+						<tr>
+							<th>Día</th>
+							<th>Tipo comida</th>
+							<th>Descripción</th>
+							<th>Calorías</th>
+							<th>Hecha</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="c : ${listaComidasDTO}">
+							<td th:text="${c.diaSemana}"></td>
+							<td th:text="${c.tipo}"></td>
+							<td th:text="${c.descripcion}"></td>
+							<td th:text="${c.calorias}"></td>
+
+							<!-- Marcar hecha -->
+							<td><a class="btn btn-sm"
+								th:classappend="${c.hecha} ? 'btn-success' : 'btn-outline-secondary'"
+								th:href="@{/cliente/{idCliente}/menus/{idMenu}/comidas/{idComida}/toggle(
+                                    idCliente=${clienteDTO.id},
+                                    idMenu=${menuDTO.id},
+                                    idComida=${c.id}
+                               )}">
+									<span th:text="${c.hecha} ? '✔ Hecha' : 'Marcar'"></span>
+							</a></td>
+						</tr>
+					</tbody>
+
+				</table>
+				</div>
+
+				<a class="btn btn-secondary mt-3"
+					th:href="@{/cliente/{idCliente}/menus(idCliente=${clienteDTO.id})}">
+					← Volver a tus menús </a>
+
+			</main>
+
+		</div>
+	</div>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

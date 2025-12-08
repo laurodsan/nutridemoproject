@@ -32,11 +32,8 @@ public class Plan {
     @Column(name = "duracionSemanas")
     private int duracionSemanas;
 
-    @Column(name = "incluyeCitas")
-    private boolean incluyeCitas;
-
-    @Column(name = "frecuenciaCitasSemanas")
-    private int frecuenciaCitasSemanas;
+    @Column(name = "citasIncluidas")
+    private int citasIncluidas;
 
     @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "plan")

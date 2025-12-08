@@ -1,0 +1,95 @@
+.btn-primary {
+  background-color: $primary-color;
+  border: none;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  border-radius: 25px;
+  padding: 10px 20px;
+
+  &:hover {
+    background-color: $secondary-color;
+    transform: translateY(-1px);
+  }
+}
+
+.btn-custom-outline {
+  border: 2px solid $accent2;
+  color: $accent2;
+  font-weight: 500; 
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+  border-radius: 25px;
+  padding: 10px 20px;
+
+  &:hover {
+    background-color: $accent2;
+    color: white;
+    transform: translateY(-1px);
+  }
+}
+
+.btn-outline-primary {
+  border: 2px solid $primary-color;
+  color: $primary-color;
+  font-weight: 5000;
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+  border-radius: 25px;
+  padding: 10px 20px;
+
+  &:hover {
+    background-color: $primary-color;
+    color: white;
+    transform: translateY(-1px);
+  }
+}
+
+.nav-link {
+  color: $text-color !important;
+  font-weight: 400;
+  margin-right: 1rem;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: $primary-color !important;
+  }
+}
+
+.btn i {
+  margin-right: 8px; 
+}
+
+.cards-small i {
+  font-size: 1.8rem;
+  color: $primary-color;
+}
+
+.cards-small h6 {
+  font-size: 0.95rem;
+}
+
+.cards-small p {
+  font-size: 0.8rem;
+}
+
+.header-gradient {
+  @include animated-gradient-top-soft(50s);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 160px; // ajusta entre 120–180 según tu gusto
+  z-index: 0;
+  pointer-events: none;
+
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+
+
+
+
+
+
+

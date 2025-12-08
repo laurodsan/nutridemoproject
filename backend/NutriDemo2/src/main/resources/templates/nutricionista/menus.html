@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Menús del Cliente</title>
+
+<!-- Bootstrap -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+	rel="stylesheet">
+
+<!-- CSS principal -->
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+
+<body>
+
+	<!-- 🔹 Menu -->
+	<header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+		<div
+			class="container d-flex justify-content-between align-items-center">
+			<!-- Logo -->
+			<a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+				<img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo"
+				height="40" class="me-2" />
+			</a>
+
+			<!-- Botón móvil -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Contenido del navbar -->
+			<div class="collapse navbar-collapse justify-content-between"
+				id="navbarNav">
+				<!-- Secciones izquierda -->
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link" th:href="@{/planes}">Planes</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/preguntas}">Preguntas frecuentes</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/sobre}">Sobre
+							nosotros</a></li>
+				</ul>
+
+				<div class="d-flex align-items-center">
+					<a class="btn btn-outline-primary" th:href="@{/logout}">Cerrar
+						sesión</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<div style="height: 80px;"></div>
+
+	<div class="container-fluid">
+		<div class="row">
+
+			<!-- Sidebar -->
+			<nav class="col-12 col-md-3 col-lg-2 d-md-block bg-light sidebar py-4 sidebar-fixed">
+				<div class="sidebar-sticky px-3">
+
+					<h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi
+						Panel</h5>
+
+					<ul class="nav flex-column">
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/nutricionista/dashboard/{id}(id=${nutricionistaDTO.id})}">
+								<i class="bi bi-person-lines-fill me-2"></i> Mi Información
+						</a></li>
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/nutricionista/{id}/clientes(id=${nutricionistaDTO.id})}">
+								<i class="bi bi-people-fill me-2"></i> Clientes asignados
+						</a></li>
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/nutricionista/{id}/menus(id=${nutricionistaDTO.id})}">
+								<i class="bi bi-card-checklist me-2"></i> Crear menús
+						</a></li>
+
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/nutricionista/{id}/citas(id=${nutricionistaDTO.id})}">
+								<i class="bi bi-calendar-week me-2"></i> Citas
+						</a></li>
+					</ul>
+
+				</div>
+			</nav>
+
+			<!-- Contenido principal -->
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+				<br>
+
+				<!-- Título y botón crear -->
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h2 class="fw-bold">
+						Menús de <span
+							th:text="${clienteDTO.nombre + ' ' + clienteDTO.apellido}"></span>
+					</h2>
+
+					<a class="btn btn-success"
+						th:href="@{/nutricionistas/{idNutricionista}/menus/{idCliente}/add(
+                           idNutricionista=${nutricionistaDTO.id},
+                           idCliente=${clienteDTO.id}
+                       )}">
+						<i class="bi bi-plus-circle me-1"></i> Crear Menú
+					</a>
+				</div>
+
+				<!-- Tabla -->
+				<div class="table-responsive-mobile">
+				<table th:if="${listaMenusDTO != null && !listaMenusDTO.isEmpty()}"
+					class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Descripción</th>
+							<th>Fecha inicio</th>
+							<th>Fecha fin</th>
+							<th>Estado</th>
+							<th>Comidas</th>
+							<th>Editar</th>
+							<th>Borrar</th>
+							<!-- NUEVO -->
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="m : ${listaMenusDTO}">
+							<td th:text="${m.descripcion}"></td>
+							<td th:text="${#dates.format(m.fechaInicio, 'dd/MM/yyyy')}"></td>
+							<td th:text="${#dates.format(m.fechaFin, 'dd/MM/yyyy')}"></td>
+							<td th:text="${m.estado}"></td>
+
+							<!-- Ver comidas -->
+							<td class="text-center"><a class="btn btn-primary btn-sm"
+								th:href="@{/menus/{idMenu}/comidas(idMenu=${m.id})}"> <i
+									class="bi bi-egg-fried"></i> Ver comidas
+							</a></td>
+
+							<!-- Editar -->
+							<td class="text-center"><a class="btn btn-warning btn-sm"
+								th:href="@{/nutricionistas/{idNutricionista}/menus/{idCliente}/update/{idMenu}(
+                       idNutricionista=${nutricionistaDTO.id},
+                       idCliente=${clienteDTO.id},
+                       idMenu=${m.id}
+                   )}">
+									<i class="bi bi-pencil-square"></i> Editar
+							</a></td>
+
+							<!-- Borrar -->
+							<td class="text-center"><a class="btn btn-danger btn-sm"
+								th:href="@{/nutricionistas/{idNutricionista}/menus/{idCliente}/delete/{idMenu}(
+                       idNutricionista=${nutricionistaDTO.id},
+                       idCliente=${clienteDTO.id},
+                       idMenu=${m.id}
+                   )}"
+								onclick="return confirm('¿Seguro que quieres eliminar este menú? Se borrarán también sus comidas.')">
+									<i class="bi bi-trash"></i> Borrar
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+				<!-- Mensaje cuando no hay menús -->
+				<p th:if="${listaMenusDTO == null || listaMenusDTO.isEmpty()}"
+					class="text-danger fw-bold">No hay menús disponibles para este
+					cliente.</p>
+
+			</main>
+
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

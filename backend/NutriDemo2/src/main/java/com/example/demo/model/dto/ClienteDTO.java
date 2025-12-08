@@ -2,10 +2,15 @@ package com.example.demo.model.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.example.demo.repository.entity.Cliente;
+import com.example.demo.repository.entity.Menu;
+import com.example.demo.repository.entity.Nutricionista;
 import com.example.demo.repository.entity.Plan;
 
 import lombok.Data;
@@ -33,6 +38,12 @@ public class ClienteDTO implements Serializable {
 	@ToString.Exclude
     private PlanDTO planDTO;
 	
+	@ToString.Exclude
+    private NutricionistaDTO nutricionistaDTO;
+	
+	@ToString.Exclude
+	private Set<MenuDTO> listaMenus = new HashSet<>();
+
 	
 	public static ClienteDTO convertToDTO(Cliente cliente, PlanDTO plan) {
 
@@ -53,7 +64,26 @@ public class ClienteDTO implements Serializable {
 	        } else {
 	            clienteDTO.setPlanDTO(new PlanDTO());
 	        }
+		 
+		    // Nutricionista (solo datos básicos)
+		    if (cliente.getNutricionista() != null) {
+		        Nutricionista n = cliente.getNutricionista();
+		        NutricionistaDTO nDTO = new NutricionistaDTO();
+		        nDTO.setId(n.getId());
+		        nDTO.setNombre(n.getNombre());
+		        nDTO.setEmail(n.getEmail());
+		        nDTO.setEspecialidad(n.getEspecialidad());
+		        clienteDTO.setNutricionistaDTO(nDTO);
+		    }
 		
+		    if (cliente.getListaMenus() != null) {
+		        Set<MenuDTO> menuDTOs = new HashSet<>();
+		        for (Menu menu : cliente.getListaMenus()) {
+		            menuDTOs.add(MenuDTO.convertToDTO(menu, null)); // null si no quieres incluir cliente dentro del DTO del menú
+		        }
+		        clienteDTO.setListaMenus(menuDTOs);
+		    }
+
 
 		return clienteDTO;
 	}
@@ -72,6 +102,22 @@ public class ClienteDTO implements Serializable {
 
         // Establecer el plan para el cliente
         cliente.setPlan(plan);
+        
+     // Nutricionista
+        if (clienteDTO.getNutricionistaDTO() != null) {
+            cliente.setNutricionista(NutricionistaDTO.convertToEntity(clienteDTO.getNutricionistaDTO()));
+        }
+        
+        if (clienteDTO.getListaMenus() != null) {
+            Set<Menu> menus = new HashSet<>();
+            for (MenuDTO menuDTO : clienteDTO.getListaMenus()) {
+                Menu menu = MenuDTO.convertToEntity(menuDTO, cliente, 
+                              menuDTO.getNutricionistaDTO() != null ? NutricionistaDTO.convertToEntity(menuDTO.getNutricionistaDTO()) : null);
+                menus.add(menu);
+            }
+            cliente.setListaMenus(menus);
+        }
+
         
 		return cliente;
 	}

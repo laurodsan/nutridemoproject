@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriDemo | Bienestar Inteligente</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+  <!-- Bootstrap Iconos -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" th:href="@{/css/main.css}" />
+
+  <!-- Tipografías -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+
+
+</head>
+
+<body>
+  <!-- 🔹 Menu -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+    <div class="container d-flex justify-content-between align-items-center">
+      <!-- Logo -->
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo" height="40" class="me-2" />
+      </a>
+
+      <!-- Botón móvil -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Contenido del navbar -->
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <!-- Secciones izquierda -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#funcionalidades">Planes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faq">Preguntas frecuentes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#sobre">Sobre nosotros</a></li>
+        </ul>
+
+        <!-- Botones derecha -->
+        <div class="d-flex align-items-center">
+          <a class="btn btn-outline-primary me-2" th:href="@{/login}">Iniciar sesión</a>
+          <a class="btn btn-primary" href="#cita">
+            <i class="bi bi-calendar4-week"></i>Agendar cita</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 🔹 Degradado superior -->
+  <div class="header-gradient"></div>
+
+
+  <!-- 🔹 Hero principal -->
+  <section id="inicio" class="hero d-flex">
+    <div class="container">
+      <div class="row">
+        <div class="col-7">
+          <h1 class="fw-bold display-5 mb-3">Gestiona tu nutrición de forma inteligente</h1>
+          <p class="lead mb-4 text-secondary">Conecta con tu nutricionista y sigue tu plan con facilidad. Creamos planes
+            de nutrición 100% personalizados , adaptados a tus objetivos, estilo de vida y preferencias.</p>
+          <div class="row text-center cards-small">
+            <div class="col-md-4">
+              <div class="card h-100 border-0 p-4">
+                <i class="bi bi-graph-up-arrow fs-1"></i>
+                <h6>Método personalizado</h6>
+                <p class="text-secondary">Enfoque único, realista y basado en objetivos, hábitos y estilo de vida
+                  individual</p>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="card h-100 border-0 p-4">
+                <i class="bi bi-bullseye fs-1"></i>
+                <h6>Seguimiento</h6>
+                <p class="text-secondary">Incluye una plataforma donde el cliente pueda ver gráficas, avances y logros
+                </p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card h-100 border-0 p-4">
+                <i class="bi bi-people fs-1"></i>
+                <h6>Presencia cercana</h6>
+                <p class="text-secondary">Tu nutricionista te acompañará y escuchará durante toda la transformación</p>
+              </div>
+            </div>
+          </div>
+          <a th:href="@{/login}" class="btn btn-primary btn-lg">Empezar ahora</a>
+        </div>
+        <div class="col-4">
+          <img th:src="@{/img/imagen-portada.png}" alt="Imagen hero" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🔹 Footer -->
+  <footer class="footer text-white py-3">
+    <div class="container text-center">
+      <p class="mb-0">© 2025 NutriDemo. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- JS de Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

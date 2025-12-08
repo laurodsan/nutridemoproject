@@ -1,0 +1,19 @@
+package com.example.demo.service;
+
+import java.util.List;
+
+import com.example.demo.model.dto.ClienteDTO;
+import com.example.demo.model.dto.PlanDTO;
+
+
+public interface ClienteService {
+
+	void save(ClienteDTO clienteDTO);
+
+	ClienteDTO loginCliente(String email, String password);
+
+	 PlanDTO findPlanById(Long id);
+
+	List<PlanDTO> findAllPlanes();
+
+}

@@ -19,8 +19,7 @@ public class PlanDTO implements Serializable {
 	private Long id;
 	private String nombre;
 	private int duracionSemanas;
-	private boolean incluyeCitas;
-	private int frecuenciaCitasSemanas;
+	private int citasIncluidas;
 
 	@ToString.Exclude
 	private List<ClienteDTO> listaClientesDTO;
@@ -32,8 +31,7 @@ public class PlanDTO implements Serializable {
 		planDTO.setId(plan.getId());
 		planDTO.setNombre(plan.getNombre());
 		planDTO.setDuracionSemanas(plan.getDuracionSemanas());
-		planDTO.setIncluyeCitas(plan.isIncluyeCitas());
-		planDTO.setFrecuenciaCitasSemanas(plan.getFrecuenciaCitasSemanas());
+		planDTO.setCitasIncluidas(plan.getCitasIncluidas());
 
 		// Aseguramos que la listaClientesDTO esté inicializada
 
@@ -58,8 +56,7 @@ public class PlanDTO implements Serializable {
 		plan.setId(planDTO.getId());
 		plan.setNombre(planDTO.getNombre());
 		plan.setDuracionSemanas(planDTO.getDuracionSemanas());
-		plan.setIncluyeCitas(planDTO.isIncluyeCitas());
-		plan.setFrecuenciaCitasSemanas(planDTO.getFrecuenciaCitasSemanas());
+		plan.setCitasIncluidas(planDTO.getCitasIncluidas());
 
 		// CARGAR LISTA DE CUENTAS
 

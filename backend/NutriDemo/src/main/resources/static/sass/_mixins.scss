@@ -1,0 +1,31 @@
+@mixin animated-gradient-top-soft($duration: 25s) {
+  background: linear-gradient(to bottom, #68eaa0 0%, rgba(104, 234, 160, 0) 100%);
+  background-size: 200% 200%;
+  animation: gradientTopSoft $duration ease-in-out infinite;
+  transition: background 3s ease-in-out; // transiciones suaves
+
+  @keyframes gradientTopSoft {
+    0% {
+      background: linear-gradient(to bottom, #68eaa0 0%, rgba(104, 234, 160, 0) 100%);
+    }
+    25% {
+      background: linear-gradient(to bottom, #f4d578 0%, rgba(244, 213, 120, 0) 100%);
+    }
+    50% {
+      background: linear-gradient(to bottom, #c9acf3 0%, rgba(201, 172, 243, 0) 100%);
+    }
+    75% {
+      background: linear-gradient(to bottom, #afc9eb 0%, rgba(175, 201, 235, 0) 100%);
+    }
+    100% {
+      background: linear-gradient(to bottom, #68eaa0 0%, rgba(104, 234, 160, 0) 100%);
+    }
+  }
+}
+
+
+
+
+
+
+

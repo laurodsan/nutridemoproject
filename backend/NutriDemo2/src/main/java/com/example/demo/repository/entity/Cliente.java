@@ -1,7 +1,9 @@
 package com.example.demo.repository.entity;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -12,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -42,6 +45,10 @@ public class Cliente {
 	private Date fechaRegistro;
 
 	@ManyToOne
+	@JoinColumn(name = "idnutricionista", nullable = true)
+	private Nutricionista nutricionista;
+	
+	@ManyToOne
 	@JoinColumn(name = "plan_id", nullable = true)
 	private Plan plan;
 	
@@ -49,6 +56,11 @@ public class Cliente {
 
 	@ToString.Exclude
 	private Evaluacion evaluacion;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "cliente")
+	@ToString.Exclude
+	private Set<Menu> listaMenus = new HashSet<>();
+
 
 
 	@Override

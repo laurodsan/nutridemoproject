@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Comidas del Menú</title>
+
+<!-- Bootstrap -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+	rel="stylesheet">
+
+<!-- CSS principal -->
+<link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+
+<body>
+
+	<!-- 🔹 Menu -->
+	<header class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+		<div
+			class="container d-flex justify-content-between align-items-center">
+			<!-- Logo -->
+			<a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+				<img th:src="@{/img/NutriDemoLogo.svg}" alt="NutriDemo logo"
+				height="40" class="me-2" />
+			</a>
+
+			<!-- Botón móvil -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Contenido del navbar -->
+			<div class="collapse navbar-collapse justify-content-between"
+				id="navbarNav">
+				<!-- Secciones izquierda -->
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item"><a class="nav-link" th:href="@{/planes}">Planes</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/preguntas}">Preguntas frecuentes</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/sobre}">Sobre
+							nosotros</a></li>
+				</ul>
+
+				<div class="d-flex align-items-center">
+					<a class="btn btn-outline-primary" th:href="@{/logout}">Cerrar
+						sesión</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<div style="height: 80px;"></div>
+
+	<div class="container-fluid">
+		<div class="row">
+
+			<!-- SIDEBAR -->
+			<nav class="col-12 col-md-3 col-lg-2 d-md-block bg-light sidebar py-4 sidebar-fixed">
+				<div class="sidebar-sticky px-3">
+					<h5 class="text-uppercase fw-bold mb-4 text-secondary">Mi
+						Panel</h5>
+					<ul class="nav flex-column">
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/nutricionista/dashboard/{id}(id=${nutricionistaDTO.id})}">
+								<i class="bi bi-person-lines-fill me-2"></i> Mi Información
+						</a></li>
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/nutricionista/{id}/clientes(id=${nutricionistaDTO.id})}">
+								<i class="bi bi-people-fill me-2"></i> Clientes asignados
+						</a></li>
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/nutricionista/{id}/menus(id=${nutricionistaDTO.id})}">
+								<i class="bi bi-card-checklist me-2"></i> Crear menús
+						</a></li>
+						<li class="nav-item mb-2"><a class="nav-link sidebar-link"
+							th:href="@{/nutricionista/{id}/citas(id=${nutricionistaDTO.id})}">
+								<i class="bi bi-calendar-week me-2"></i> Citas
+						</a></li>
+					</ul>
+				</div>
+			</nav>
+
+			<!-- CONTENIDO PRINCIPAL -->
+			<main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+				<br>
+
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h2 class="fw-bold">
+						Comidas del menú: <span th:text="${menuDTO.descripcion}"></span>
+					</h2>
+
+					<!-- FILTRO POR DÍA (ACTUALIZADO) -->
+					<form method="get"
+						th:action="@{/menus/{idMenu}/comidas(idMenu=${menuDTO.id})}"
+						class="mb-3">
+
+						<label class="form-label fw-bold">Filtrar por día:</label> <select
+							name="diaSemana" class="form-select w-auto d-inline-block"
+							onchange="this.form.submit()">
+
+							<option value="">Todos</option>
+
+							<option value="Lunes" th:selected="${diaSeleccionado == 'Lunes'}">Lunes</option>
+							<option value="Martes"
+								th:selected="${diaSeleccionado == 'Martes'}">Martes</option>
+							<option value="Miércoles"
+								th:selected="${diaSeleccionado == 'Miércoles'}">Miércoles</option>
+							<option value="Jueves"
+								th:selected="${diaSeleccionado == 'Jueves'}">Jueves</option>
+							<option value="Viernes"
+								th:selected="${diaSeleccionado == 'Viernes'}">Viernes</option>
+							<option value="Sábado"
+								th:selected="${diaSeleccionado == 'Sábado'}">Sábado</option>
+							<option value="Domingo"
+								th:selected="${diaSeleccionado == 'Domingo'}">Domingo</option>
+
+						</select>
+
+					</form>
+
+					<!-- Botón Crear Comida -->
+					<a class="btn btn-success"
+						th:href="@{/menus/{idMenu}/comidas/add(idMenu=${menuDTO.id})}">
+						<i class="bi bi-plus-circle me-1"></i> Crear Comida
+					</a>
+				</div>
+
+				<!-- TABLA DE COMIDAS -->
+				<div class="table-responsive-mobile">
+				<table
+					th:if="${listaComidasDTO != null && !listaComidasDTO.isEmpty()}"
+					class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Día</th>
+							<th>Tipo</th>
+							<th>Descripción</th>
+							<th>Calorías</th>
+							<th>Hecha</th>
+							<th>Editar</th>
+							<th>Borrar</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="c : ${listaComidasDTO}">
+							<td th:text="${c.diaSemana}"></td>
+							<td th:text="${c.tipo}"></td>
+							<td th:text="${c.descripcion}"></td>
+							<td th:text="${c.calorias}"></td>
+							<td class="text-center"><i
+								class="bi bi-check-circle-fill text-success" th:if="${c.hecha}"
+								title="Comida realizada"></i> <i
+								class="bi bi-x-circle-fill text-danger" th:if="${!c.hecha}"
+								title="Pendiente"></i></td>
+
+
+							<td class="text-center">
+								<!-- Botón editar --> <a class="btn btn-sm btn-warning"
+								th:href="@{/menus/{idMenu}/comidas/{idComida}/update(idMenu=${menuDTO.id}, idComida=${c.id})}">
+									<i class="bi bi-pencil-square"></i> Editar
+							</a>
+							</td>
+							<td class="text-center"><a class="btn btn-sm btn-danger"
+								th:href="@{/menus/{idMenu}/comidas/{idComida}/delete(idMenu=${menuDTO.id}, idComida=${c.id})}"
+								onclick="return confirm('¿Seguro que deseas eliminar esta comida?');">
+									<i class="bi bi-trash-fill"></i> Borrar
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+
+				<!-- MENSAJE SI NO HAY COMIDAS -->
+				<p th:if="${listaComidasDTO == null || listaComidasDTO.isEmpty()}"
+					class="text-danger fw-bold">No hay comidas registradas en este
+					menú.</p>
+
+			</main>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+

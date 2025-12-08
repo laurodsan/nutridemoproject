@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mantenimiento de Nutricionistas</title>
+</head>
+
+<body>
+    <h1>Mantenimiento de Nutricionistas</h1>
+    <br>
+    <div>
+        <br>
+        <!-- Mostrar mensaje si no hay nutricionistas -->
+        <h2 th:if="${listaNutricionistasDTO == null or #lists.isEmpty(listaNutricionistasDTO)}">
+            No hay nutricionistas
+        </h2>
+
+        <!-- Tabla de nutricionistas -->
+        <div th:if="${listaNutricionistasDTO != null and !#lists.isEmpty(listaNutricionistasDTO)}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <td>Id</td>
+                        <td>Nombre</td>
+                        <td>Correo electrónico</td>
+                        <td>Especialidad</td>
+                        <td>Editar</td>
+                        <td>Eliminar</td>
+                        <td>Clientes</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${listaNutricionistasDTO}">
+                        <td>
+                            <a th:href="@{/nutricionistas/{idNutricionista}(idNutricionista=${item.id})}"
+                               th:text="${item.id}"></a>
+                        </td>
+                        <td th:text="${item.nombre}"></td>
+                        <td th:text="${item.email}"></td>
+                        <td th:text="${item.especialidad}"></td>
+                        <td>
+                            <a th:href="@{/nutricionistas/update/{idNutricionista}(idNutricionista=${item.id})}">Editar</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/nutricionistas/delete/{idNutricionista}(idNutricionista=${item.id})}">Eliminar</a>
+                        </td>
+                        <td>
+                            <a th:href="@{/nutricionistas/{idNutricionista}/clientes(idNutricionista=${item.id})}">
+                                Clientes
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            <div>
+                <a th:href="@{/nutricionistas/add}">Agregar nuevo nutricionista</a> <br>
+                <a th:href="@{/}">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Nutricionista</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="/frontend/assets/sass/main.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body class="dashboard-nutri">
+
+<!-- Navbar superior (igual que tu estilo) -->
+  <header class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+
+      <a class="navbar-brand d-flex align-items-center" href="/frontend/index.html">
+        <img src="/frontend/assets/img/NutriDemoLogo.svg" alt="NutriDemo logo" height="40" class="me-2" />
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#">Planes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Preguntas frecuentes</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Sobre nosotros</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center">
+          <a class="btn btn-outline-primary me-2" href="/logout">Cerrar sesión</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 🔹 Espacio del navbar -->
+  <div style="height: 80px;"></div>
+
+  <!-- ============================
+        🔹 Layout principal
+  ============================= -->
+  <div class="container-fluid">
+    <div class="row">
+
+      <!-- ============================
+           🔹 SIDEBAR IZQUIERDO
+      ============================= -->
+      <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar py-4" style="min-height: 100vh;">
+
+        <div class="sidebar-sticky px-3">
+
+          <h5 class="text-uppercase fw-bold mb-4 text-secondary">Panel Nutricionista</h5>
+
+          <ul class="nav flex-column">
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link"
+                 th:href="@{/nutricionista/dashboard/{id}(id=${nutricionistaDTO.id})}">
+                <i class="bi bi-person-badge-fill me-2"></i> Mi información
+              </a>
+            </li>
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link"
+                 th:href="@{/nutricionista/clientes/{id}(id=${nutricionistaDTO.id})}">
+                <i class="bi bi-people-fill me-2"></i> Clientes asignados
+              </a>
+            </li>
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link" href="#">
+                <i class="bi bi-card-checklist me-2"></i> Crear menú
+              </a>
+            </li>
+
+            <li class="nav-item mb-2">
+              <a class="nav-link sidebar-link" href="#">
+                <i class="bi bi-calendar-week me-2"></i> Agendar cita
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+
+      <!-- ============================
+           🔹 CONTENIDO PRINCIPAL
+      ============================= -->
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-5">
+
+        <br>
+
+        <h2 class="fw-bold mb-4">
+          Bienvenido, <span th:text="${nutricionistaDTO.nombre}"></span>
+        </h2>
+
+        <div class="row g-4">
+
+          <!-- Tarjeta: Información del nutricionista -->
+          <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+              <h5 class="fw-bold mb-3">Mi Información</h5>
+
+              <p><strong>Nombre:</strong> <span th:text="${nutricionistaDTO.nombre}"></span></p>
+              <p><strong>Email:</strong> <span th:text="${nutricionistaDTO.email}"></span></p>
+              <p><strong>Especialidad:</strong> <span th:text="${nutricionistaDTO.especialidad}"></span></p>
+              <p><strong>Total clientes:</strong> <span th:text="${nutricionistaDTO.listaClientesDTO.size()}"></span></p>
+            </div>
+          </div>
+
+          <!-- Tarjeta: Clientes asignados -->
+          <div class="col-md-6">
+            <div class="card p-4 shadow-sm">
+              <h5 class="fw-bold mb-3">Clientes asignados</h5>
+
+              <p th:if="${nutricionistaDTO.listaClientesDTO.size() == 0}" class="text-danger fw-bold">
+                No tienes clientes asignados todavía.
+              </p>
+
+              <ul class="list-group" th:if="${nutricionistaDTO.listaClientesDTO.size() > 0}">
+                <li class="list-group-item d-flex justify-content-between align-items-center"
+                    th:each="cliente : ${nutricionistaDTO.listaClientesDTO}">
+                  <span th:text="${cliente.nombre + ' ' + cliente.apellido}"></span>
+                  <a th:href="@{/cliente/dashboard/{id}(id=${cliente.id})}"
+                     class="btn btn-sm btn-primary">Ver</a>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${add} ? 'Nuevo nutricionista' : 'Actualizar nutricionista'"></title>
+</head>
+
+<body>
+	<h1 th:text="${add} ? 'Nuevo nutricionista' : 'Actualizar nutricionista'"></h1>
+	<br>
+
+	<form th:action="@{/nutricionistas/save}" th:object="${nutricionistaDTO}" method="post">
+		<table border="0">
+			<tr th:if="${nutricionistaDTO.id}">
+				<td>Id</td>
+				<td>:</td>
+				<td><input type="text" th:field="*{id}" readonly></td>
+			</tr>
+
+			<tr>
+				<td>Nombre</td>
+				<td>:</td>
+				<td><input type="text" th:field="*{nombre}" required /></td>
+			</tr>
+
+			<tr>
+				<td>Correo electrónico</td>
+				<td>:</td>
+				<td><input type="email" th:field="*{email}" required /></td>
+			</tr>
+
+			<tr>
+				<td>Especialidad</td>
+				<td>:</td>
+				<td><input type="text" th:field="*{especialidad}" required /></td>
+			</tr>
+
+			<tr>
+				<td>Contraseña</td>
+				<td>:</td>
+				<td><input type="password" th:field="*{password}" required /></td>
+			</tr>
+		</table>
+
+		<br>
+		<h3>Clientes asociados</h3>
+		<table border="1" th:if="${nutricionistaDTO.listaClientesDTO != null and !nutricionistaDTO.listaClientesDTO.isEmpty()}">
+			<tr>
+				<th>Id</th>
+				<th>Nombre</th>
+				<th>Correo electrónico</th>
+			</tr>
+			<tr th:each="cliente : ${nutricionistaDTO.listaClientesDTO}">
+				<td th:text="${cliente.id}"></td>
+				<td th:text="${cliente.nombre}"></td>
+				<td th:text="${cliente.email}"></td>
+			</tr>
+		</table>
+
+		<p th:if="${nutricionistaDTO.listaClientesDTO == null or nutricionistaDTO.listaClientesDTO.isEmpty()}">
+			No hay clientes asociados.
+		</p>
+
+		<br>
+		<input type="submit" th:value="${add} ? 'Guardar' : 'Actualizar'" />
+	</form>
+
+	<br>
+	<a th:href="@{/nutricionistas}">Volver a la lista de nutricionistas</a>
+
+</body>
+</html>
+

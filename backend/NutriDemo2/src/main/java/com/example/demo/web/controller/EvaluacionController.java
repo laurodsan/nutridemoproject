@@ -14,62 +14,70 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo.model.dto.ClienteDTO;
 import com.example.demo.model.dto.EvaluacionDTO;
+import com.example.demo.service.ClienteService;
 import com.example.demo.service.EvaluacionService;
 
 @Controller
 public class EvaluacionController {
-	
-	private static final Logger log = LoggerFactory.getLogger(EvaluacionController.class);
-	
-	@Autowired
-	private EvaluacionService evaluacionService;
-	
-	// Acceder a la evaluación: crea o muestra según exista
-	@GetMapping("/cliente/dashboard/{idCliente}/evaluacion")
-	public ModelAndView accederEvaluacion(@PathVariable("idCliente") Long idCliente) {
+    
+    private static final Logger log = LoggerFactory.getLogger(EvaluacionController.class);
+    
+    @Autowired
+    private EvaluacionService evaluacionService;
 
-	    log.info("EvaluacionController - accederEvaluacion: Cliente " + idCliente);
+    @Autowired
+    private ClienteService clienteService;
+    
+    // Acceder a la evaluación: crea o muestra según exista
+    @GetMapping("/cliente/dashboard/{idCliente}/evaluacion")
+    public ModelAndView accederEvaluacion(@PathVariable("idCliente") Long idCliente) {
 
-	    EvaluacionDTO evaluacionDTO = evaluacionService.findByClienteId(idCliente);
+        log.info("EvaluacionController - accederEvaluacion: Cliente " + idCliente);
 
-	    if (evaluacionDTO == null) {
-	        // No existe evaluación → formulario
-	        ClienteDTO clienteDTO = new ClienteDTO();
-	        clienteDTO.setId(idCliente);
+        EvaluacionDTO evaluacionDTO = evaluacionService.findByClienteId(idCliente);
 
-	        evaluacionDTO = new EvaluacionDTO();
-	        evaluacionDTO.setClienteDTO(clienteDTO);
+        if (evaluacionDTO == null) {
+            // No existe evaluación → formulario
+            ClienteDTO clienteDTO = new ClienteDTO();
+            clienteDTO.setId(idCliente);
 
-	        ModelAndView mav = new ModelAndView("cliente/evaluacionform");
-	        mav.addObject("evaluacionDTO", evaluacionDTO);
-	        mav.addObject("add", true); // indica formulario editable
-	        return mav;
-	    } else {
-	        // Ya existe evaluación → mostrar solo lectura
-	        ModelAndView mav = new ModelAndView("cliente/evaluacionshow");
-	        mav.addObject("evaluacionDTO", evaluacionDTO);
-	        return mav;
-	    }
-	}
+            evaluacionDTO = new EvaluacionDTO();
+            evaluacionDTO.setClienteDTO(clienteDTO);
 
-	// Guardar evaluación inicial
-	@PostMapping("/cliente/dashboard/{idCliente}/evaluacion/save")
-	public ModelAndView saveEvaluacion(@PathVariable("idCliente") Long idCliente,
-	                                   @ModelAttribute("evaluacionDTO") EvaluacionDTO evaluacionDTO) {
+            ModelAndView mav = new ModelAndView("cliente/evaluacionform");
+            mav.addObject("evaluacionDTO", evaluacionDTO);
+            mav.addObject("add", true); 
+            return mav;
 
-		log.info("EvaluacionController - save: Guardar evaluación del cliente " + idCliente);
-		
-		if (evaluacionDTO.getFecha() == null) {
-			evaluacionDTO.setFecha(new Date());
-	    }
+        } else {
+            // Ya existe evaluación → mostrar solo lectura
 
-		evaluacionDTO.getClienteDTO().setId(idCliente); // aseguramos ID
+            // 🟩 Recuperar cliente completo
+            ClienteDTO clienteDTO = evaluacionDTO.getClienteDTO();
+            clienteDTO = clienteService.findById(clienteDTO);
 
-		// Guardar evaluación
-		evaluacionService.save(evaluacionDTO);
+            ModelAndView mav = new ModelAndView("cliente/evaluacionshow");
+            mav.addObject("evaluacionDTO", evaluacionDTO);
+            mav.addObject("clienteDTO", clienteDTO);
+            return mav;
+        }
+    }
 
-		// Redirigir a la vista de evaluación (solo lectura)
-		return new ModelAndView("redirect:/cliente/dashboard/" + idCliente + "/evaluacion");
-	}
+    @PostMapping("/cliente/dashboard/{idCliente}/evaluacion/save")
+    public ModelAndView saveEvaluacion(@PathVariable("idCliente") Long idCliente,
+                                       @ModelAttribute("evaluacionDTO") EvaluacionDTO evaluacionDTO) {
+
+        log.info("EvaluacionController - save: Guardar evaluación del cliente " + idCliente);
+        
+        if (evaluacionDTO.getFecha() == null) {
+            evaluacionDTO.setFecha(new Date());
+        }
+
+        evaluacionDTO.getClienteDTO().setId(idCliente);
+
+        evaluacionService.save(evaluacionDTO);
+
+        return new ModelAndView("redirect:/cliente/dashboard/" + idCliente + "/evaluacion");
+    }
 }
 
